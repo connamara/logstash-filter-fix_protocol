@@ -1,11 +1,12 @@
 require 'spec_helper'
 
 describe FixLogstashPlugin do
-  it 'has a version number' do
-    expect(FixLogstashPlugin::VERSION).not_to be nil
-  end
-
-  it 'does something useful' do
-    expect(false).to eq(true)
+  describe '.configure' do
+    it 'can set a data dictionary' do
+      FixLogstashPlugin.configure do |config|
+        config.data_dictionary = "spec/fixtures"
+      end
+      expect(FixLogstashPlugin.data_dictionary).to eq "spec/fixtures"
+    end
   end
 end
