@@ -6,11 +6,11 @@ require 'fix_logstash_plugin/version'
 Gem::Specification.new do |spec|
   spec.name          = "fix_logstash_plugin"
   spec.version       = FixLogstashPlugin::VERSION
-  spec.authors       = ["daino3"]
-  spec.email         = ["dainovu3@gmail.com"]
+  spec.authors       = ["Connamara Systems"]
+  spec.email         = ["dhall@connamara.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = "FIX protocol logstash filter"
+  spec.description   = "Make your logs work for you with logstash and a FIX filter"
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.9"
+  spec.add_development_dependency "bundler", "~> 1.8"
   spec.add_development_dependency "rake", "~> 10.0"
 end
