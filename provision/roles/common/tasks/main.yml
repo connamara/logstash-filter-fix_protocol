@@ -1,13 +1,20 @@
 ---
 
-# required for targets that use selinux
-- name : install libselinux-python
-  yum: name=libselinux-python-{{ libselinux_python_version }} state=present
+- name: installing dependencies
+  yum: name={{ item }} state=present
   sudo: yes
-
-- name: install epel
-  yum: name=epel-release-{{ epel_version }} state=present
-  sudo: yes
+  with_items:
+    - libselinux-python-{{ libselinux_python_version }}
+    - epel-release-{{ epel_version }}
+    - java-{{ openjdk_version }}-openjdk-devel
+    - ant
+    - lsof
+    - libtool
+    - gcc-c++
+    - libxml2
+    - libxml2-devel
+    - libxslt
+    - libxslt-devel
 
 - name: ntp
   sudo: yes
@@ -18,7 +25,3 @@
   sudo: yes
   service: name=ntpd state=started enabled=yes
   tags: [ntp]
-
-- name: install openjdk-devel
-  yum: name=java-{{ openjdk_version }}-openjdk-devel state=present
-  sudo: yes

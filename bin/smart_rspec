@@ -1,0 +1,25 @@
+#! /bin/bash
+
+# With this guy, booting up jruby spec suite went from 18 -> 5 seconds
+# Note, we needed gcc to configure/make nailgun server
+
+# use of binstubs over bundle exec, to generate: `bundle binstub rspec-core`
+RSPEC="./bin/rspec"
+
+# Disable runtime optimization with JRUBY_OPTS
+export JRUBY_OPTS="-Xcompile.invokedynamic=false -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-noverify -Xcompile.mode=OFF"
+
+# Looking for nailgun
+lsof -i :2113 > /dev/null
+if [ $? == 0 ]; then
+  RSPEC="ruby --ng -S $RSPEC"
+fi
+
+CMD="$RSPEC $@"
+echo $CMD
+$CMD
+
+## Commands
+# 1. Start nailgun server `ruby --ng-server &`
+# 2. './bin/smart_rspec'
+# 3. To kill ng-server: `lsof -i tcp:2113` and kill PID
