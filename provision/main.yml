@@ -1,0 +1,26 @@
+---
+- hosts: all
+  sudo: true
+  vars:
+    rvm1_rubies:
+      - "{{ jruby_version }}"
+    rvm1_install_flags: '--auto-dotfiles --user-install --with-gems="bundler"'
+    rvm1_install_path: '/home/{{ ansible_ssh_user }}/.rvm'
+
+  roles:
+    - { role: common, sudo: yes }
+    - { role: geerlingguy.logstash, sudo: yes }
+    - { role: rvm_io.rvm1-ruby, sudo: yes }
+
+  tasks:
+    - name: Main | Ensure that rvm is sourced correctly
+      lineinfile: >
+        dest=/home/vagrant/.bashrc
+        line='{{ item }}'
+      with_items:
+        - 'export PATH="$PATH:$HOME/.rvm/bin"'
+        - '[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"'
+        - cd /vagrant
+
+    - name: Main | Make sure gem path is owned by vagrant
+      file: path=/home/vagrant/.rvm/gems/{{ jruby_version }} state=directory mode=0755 owner={{ ansible_ssh_user }} recurse=yes

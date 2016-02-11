@@ -1,13 +1,28 @@
 ---
 
-- name: installing dependencies
+- name: install core dependencies
   yum: name={{ item }} state=present
-  sudo: yes
   with_items:
-    - libselinux-python-{{ libselinux_python_version }}
-    - epel-release-{{ epel_version }}
-    - java-{{ openjdk_version }}-openjdk-devel
-    - ant
+    - epel-release-7-5
+    - libselinux-python
+
+- name: install openjdk-devel
+  yum: name=java-{{ openjdk_version }}-openjdk-devel state=present
+
+- name: Get the real JAVA_HOME
+  shell: readlink -f `which java` | sed "s/\/bin\/java$//"
+  register: java_home
+  always_run: true
+
+- name: Ensure that the java home is set properly
+  lineinfile: >
+    dest=/home/vagrant/.bashrc
+    line="export JAVA_HOME={{ java_home.stdout }}"
+
+- name: installing additional dependencies
+  yum: name={{ item }} state=present
+  with_items:
+    - git
     - lsof
     - libtool
     - gcc-c++
@@ -17,11 +32,9 @@
     - libxslt-devel
 
 - name: ntp
-  sudo: yes
   yum: name=ntp state=present
   tags: [ntp]
 
 - name: start ntp server
-  sudo: yes
   service: name=ntpd state=started enabled=yes
   tags: [ntp]

@@ -12,10 +12,10 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "chef/centos-6.6"
+  config.vm.box = "bento/centos-7.1"
 
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provision/development.yml"
+    ansible.playbook = "provision/main.yml"
   end
 
   # Disable automatic box update checking. If you disable this, then
