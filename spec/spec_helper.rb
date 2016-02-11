@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'fix_logstash_plugin'
+require 'logstash/filters/fix_message'
+require "logstash/devutils/rspec/spec_helper"
 
 require 'pry'
 
