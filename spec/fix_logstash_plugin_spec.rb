@@ -12,13 +12,13 @@ describe LogStash::Filters::FixMessage do
   describe '.configure' do
     it 'can set a data dictionary path' do
       fix_dict_path = LogStash::Filters::FixMessage.data_dictionary_path
-      expect(fix_dict_path).to eq "/vagrant/spec/fixtures/FIX42.xml"
+      expect(fix_dict_path).to eq "#{Dir.pwd}/spec/fixtures/FIX42.xml"
       expect(File.exists?(fix_dict_path)).to be true
     end
   end
 
   describe '#data_dictionary' do
-    it 'instantiates a data dictionary from the data dictionary path', :focus do
+    it 'instantiates a data dictionary from the data dictionary path' do
       fix_filter = LogStash::Filters::FixMessage.new
       expect(fix_filter.data_dictionary).to be_a(LogStash::Filters::DataDictionary)
     end
