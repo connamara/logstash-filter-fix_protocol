@@ -1,32 +1,47 @@
 # encoding: utf-8
 require "logstash/filters/base"
 require "logstash/namespace"
+require "logstash/filters/data_dictionary"
 
-class LogStash::Filters::FixMessage < LogStash::Filters::Base
-  # extend self
+module LogStash
+  module  Filters
+    class FixMessage < LogStash::Filters::Base
+      class << self
+        attr_accessor :data_dictionary_path
 
-  # attr_accessor :data_dictionary
+        def configure
+          yield self
+        end
+      end
 
-  # def configure
-  #   yield self
-  # end
-  config_name "fix_message"
+      attr_reader :data_dictionary
 
-  config :message, validate: :string, default: "Hello World!"
+      config_name "fix_message"
 
-  def register
-    # Add instance variables
-  end
+      config :message, validate: :string, default: "Hello World!"
 
-  def filter(event)
+      def initialize(options = {})
+        super(options)
 
-    if @message
-      # Replace the event message with our message as configured in the
-      # config file.
-      event["message"] = @message
+        fail "Need to configure a valid data dictionary path" unless self.class.data_dictionary_path
+        @data_dictionary = DataDictionary.new(self.class.data_dictionary_path)
+      end
+
+      def register
+        # Add instance variables
+      end
+
+      def filter(event)
+
+        if @message
+          # Replace the event message with our message as configured in the
+          # config file.
+          event["message"] = @message
+        end
+
+        # filter_matched should go in the last line of our successful code
+        filter_matched(event)
+      end
     end
-
-    # filter_matched should go in the last line of our successful code
-    filter_matched(event)
   end
 end
