@@ -21,9 +21,10 @@ Gem::Specification.new do |s|
   s.metadata = { "logstash_plugin" => "true", "logstash_group" => "filter" }
 
   s.add_runtime_dependency "logstash-core", ">= 2.0.0.beta2", "< 3.0.0"
-  s.add_runtime_dependency 'logstash-input-generator'
+  s.add_runtime_dependency "logstash-input-generator"
+  s.add_runtime_dependency "quickfix-jruby"
 
-  s.add_development_dependency 'logstash-devutils'
+  s.add_development_dependency "logstash-devutils"
   s.add_development_dependency "bundler", "~> 1.8"
   s.add_development_dependency "rake", "~> 10.0"
   s.add_development_dependency "rspec"
