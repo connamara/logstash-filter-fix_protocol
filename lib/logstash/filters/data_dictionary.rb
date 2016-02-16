@@ -1,7 +1,5 @@
-#encoding ascii
-
-require 'rexml/document'
 require 'quickfix'
+require 'rexml/document'
 
 module LogStash
   module  Filters
