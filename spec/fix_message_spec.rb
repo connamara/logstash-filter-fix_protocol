@@ -4,20 +4,10 @@ describe LogStash::Filters::FixMessage do
   let(:message_str) { "8=FIXT.1.1\x0135=8\x0149=ITG\x0156=SILO\x01315=8\x016=100.25\x01410=50.25\x01424=23.45\x01411=Y\x0143=N\x0140=1\x015=N\x01" }
   let(:another_str) { "8=FIXT.1.1\x0135=B\x0149=ITG\x0156=SILO\x01148=Market Bulls Have Short Sellers on the Run\x0133=2\x0158=The bears have been cowed by the bulls.\x0158=Buy buy buy\x01354=0\x0143=N\x0140=1\x015=N\x01" }
 
-  let(:filter) do
-    LogStash::Filters::FixMessageFilter.configure do |config|
-      # should give absolute path to FIX data dictionary
-      # TODO: Revisit this once we know how folks will configure this
-      # config.data_dictionary_path = load_fixture("FIX42.xml")
-      config.session_dictionary_path = load_fixture("FIXT11.xml")
-      config.data_dictionary_path = load_fixture("FIX50SP1.xml")
-    end
-
-    LogStash::Filters::FixMessageFilter.new
-  end
-
-  let(:message)  { LogStash::Filters::FixMessage.new(message_str, filter.data_dictionary, filter.session_dictionary) }
-  let(:message2) { LogStash::Filters::FixMessage.new(another_str, filter.data_dictionary, filter.session_dictionary) }
+  let(:data_dictionary) { LogStash::Filters::DataDictionary.new(load_fixture("FIX50SP1.xml")) }
+  let(:session_dictionary) { LogStash::Filters::DataDictionary.new(load_fixture("FIXT11.xml")) }
+  let(:message)  { LogStash::Filters::FixMessage.new(message_str, data_dictionary, session_dictionary) }
+  let(:message2) { LogStash::Filters::FixMessage.new(another_str, data_dictionary, session_dictionary) }
 
   describe '#type' do
     it 'returns the message type' do
