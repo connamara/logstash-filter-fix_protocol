@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "logstash-core", ">= 2.0.0.beta2", "< 3.0.0"
   s.add_runtime_dependency "logstash-input-generator"
   s.add_runtime_dependency "quickfix-jruby"
+  s.add_runtime_dependency "activesupport"
 
   s.add_development_dependency "logstash-devutils"
   s.add_development_dependency "bundler", "~> 1.8"
