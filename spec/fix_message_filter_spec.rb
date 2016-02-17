@@ -1,38 +1,46 @@
 require 'spec_helper'
 
 describe LogStash::Filters::FixMessage do
-  before(:each) do
-    LogStash::Filters::FixMessageFilter.configure do |config|
-      # should give absolute path to FIX data dictionary
-      # TODO: Revisit this once we know how folks will configure this
-      config.data_dictionary_path = load_fixture("FIX42.xml")
-    end
+  let(:fix_5_config) do
+    {
+      "message" => ["message"],
+      "session_dictionary_path" => load_fixture("FIXT11.xml"),
+      "data_dictionary_path" => load_fixture("FIX50SP1.xml")
+    }
   end
 
-  describe '.configure' do
-    it 'can set a data dictionary path' do
-      fix_dict_path = LogStash::Filters::FixMessageFilter.data_dictionary_path
-      expect(fix_dict_path).to eq "#{Dir.pwd}/spec/fixtures/FIX42.xml"
-      expect(File.exists?(fix_dict_path)).to be true
-    end
+  let(:fix_4_config) do
+    {
+      "message" => ["message"],
+      "data_dictionary_path" => load_fixture("FIX42.xml")
+    }
   end
 
-  describe '#data_dictionary' do
-    it 'instantiates a data dictionary from the data dictionary path' do
-      fix_filter = LogStash::Filters::FixMessageFilter.new
-      expect(fix_filter.data_dictionary).to be_a(LogStash::Filters::DataDictionary)
+  describe 'config' do
+    context 'fix 4 configuration' do
+      let(:filter) { LogStash::Filters::FixMessageFilter.new(fix_4_config) }
+
+      it 'reuses the data dictionary as the session dictionary' do
+
+        expect(filter.data_dictionary).to be_a(LogStash::Filters::DataDictionary)
+        expect(filter.session_dictionary == filter.data_dictionary).to be true
+      end
+    end
+
+    context 'fix 5 configuration' do
+      let(:filter) { LogStash::Filters::FixMessageFilter.new(fix_5_config) }
+
+      it 'instantiates a new data dictionary for a session dictionary' do
+
+        expect(filter.data_dictionary).to be_a(LogStash::Filters::DataDictionary)
+        expect(filter.session_dictionary == filter.data_dictionary).to be false
+      end
     end
   end
 
   context 'an incoming execution report' do
     # TODO: Add Grok Regexp to capture individual FIX messages from logging FIX format
-    config <<-CONFIG
-      filter {
-        fix_message {
-          message => ["message"]
-        }
-      }
-    CONFIG
+    config fix_4_configuration
 
     execution = "8=FIXT.1.1\x0135=8\x0149=ITG\x0156=SILO\x01315=8\x016=100.25\x01410=50.25\x01424=23.45\x01411=Y\x0143=N\x0140=1\x015=N\x01"
 
