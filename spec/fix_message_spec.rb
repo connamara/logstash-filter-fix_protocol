@@ -79,11 +79,12 @@ describe LF::FixMessage do
       it 'can parse dat' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/heartbeat.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            # TODO: Need to figure out difference between 4/5 version parsing
+            expect(["Heartbeat", "HEARTBEAT"].include?(hash["MsgType"])).to be true
+
             expect(hash["BeginString"]).to be_a String
             expect(hash["SendingTime"]).to be_a String
             expect(hash["CheckSum"]).to be_a String
-            # TODO: Need to figure out difference between 4/5 version parsing
-            expect(["Heartbeat", "HEARTBEAT"].include?(hash["MsgType"])).to be true
             expect([String, Fixnum].include?(hash["BodyLength"].class)).to be true
             expect([String, Fixnum].include?(hash["MsgSeqNum"].class)).to be true
             expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
@@ -114,19 +115,18 @@ describe LF::FixMessage do
       it 'can parse dat' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/execution_report.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            expect(["ExecutionReport"].include?(hash["MsgType"])).to be true
+
             expect(hash["ClOrdID"]).to be_a String
             expect(hash["Symbol"]).to be_a String
 
             expect(["NEW", "FILLED"].include?(hash["OrdStatus"])).to be true
             expect(["BUY", "SELL"].include?(hash["Side"])).to be true
 
-            expect(["ExecutionReport"].include?(hash["MsgType"])).to be true
-
             expect([String, Float].include?(hash["LastPx"].class)).to be true
             # TODO: This breaks between versions 4 & 5
             # expect([String, Float].include?(hash["LastShares"].class)).to be true
             expect([String, Float].include?(hash["OrderQty"].class)).to be true
-
 
             expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
             expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
@@ -139,6 +139,8 @@ describe LF::FixMessage do
       it 'can parse dat' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/new_order_single.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            expect(hash["MsgType"]).to eq "NewOrderSingle"
+
             expect(hash["ClOrdID"]).to be_a String
             expect(hash["Symbol"]).to be_a String
             expect(hash["TimeInForce"]).to be_a String
@@ -146,7 +148,26 @@ describe LF::FixMessage do
 
             expect(["MARKET", "LIMIT"].include?(hash["OrdType"])).to be true
             expect(["BUY", "SELL"].include?(hash["Side"])).to be true
-            expect(hash["MsgType"]).to eq "NewOrderSingle"
+
+            expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+          end
+        end
+      end
+    end
+
+    context 'order cancel request' do
+      it 'can parse dat' do
+        [fix_4, fix_5].each do |version|
+          should_parse_fix_messages('message_types/order_cancel_request.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            expect(hash["MsgType"]).to eq "OrderCancelRequest"
+
+            expect(hash["ClOrdID"]).to be_a String
+            expect(hash["OrigClOrdID"]).to be_a String
+            expect(hash["Symbol"]).to be_a String
+            expect(hash["OrderQty"]).to be_a Float
+
+            expect(["BUY", "SELL"].include?(hash["Side"])).to be true
 
             expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
             expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
