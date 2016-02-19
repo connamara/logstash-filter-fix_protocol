@@ -29,6 +29,10 @@ module LogStash
         @session_dictionary = session_dict.present? ? DataDictionary.new(session_dict) : @data_dictionary
       end
 
+      def register
+        # just here because you complain otherwise
+      end
+
       def filter(event)
         if @message
           # Replace the event message with our message as configured in the config file.

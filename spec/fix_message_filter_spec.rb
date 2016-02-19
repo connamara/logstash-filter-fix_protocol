@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe LogStash::Filters::FixMessage do
+describe LF::FixMessage do
   let(:fix_5_config) do
     {
       "message" => ["message"],
@@ -18,21 +18,21 @@ describe LogStash::Filters::FixMessage do
 
   describe 'config' do
     context 'fix 4 configuration' do
-      let(:filter) { LogStash::Filters::FixMessageFilter.new(fix_4_config) }
+      let(:filter) { LF::FixMessageFilter.new(fix_4_config) }
 
       it 'reuses the data dictionary as the session dictionary' do
 
-        expect(filter.data_dictionary).to be_a(LogStash::Filters::DataDictionary)
+        expect(filter.data_dictionary).to be_a(LF::DataDictionary)
         expect(filter.session_dictionary == filter.data_dictionary).to be true
       end
     end
 
     context 'fix 5 configuration' do
-      let(:filter) { LogStash::Filters::FixMessageFilter.new(fix_5_config) }
+      let(:filter) { LF::FixMessageFilter.new(fix_5_config) }
 
       it 'instantiates a new data dictionary for a session dictionary' do
 
-        expect(filter.data_dictionary).to be_a(LogStash::Filters::DataDictionary)
+        expect(filter.data_dictionary).to be_a(LF::DataDictionary)
         expect(filter.session_dictionary == filter.data_dictionary).to be false
       end
     end
