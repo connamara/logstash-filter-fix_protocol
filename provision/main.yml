@@ -24,3 +24,12 @@
 
     - name: Main | Make sure gem path is owned by vagrant
       file: path=/home/vagrant/.rvm/gems/{{ jruby_version }} state=directory mode=0755 owner={{ ansible_ssh_user }} recurse=yes
+
+    - name: Main | Ensure that our filter is sourced by our installation of LogStash
+      lineinfile: >
+        dest=/opt/logstash/Gemfile
+        line='gem "logstash-filter-fix_message", :path => "/vagrant/"'
+
+    - name: Main | Install our LogStash Plugin
+      shell: bin/plugin install --no-verify chdir=/opt/logstash/
+
