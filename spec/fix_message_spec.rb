@@ -175,5 +175,19 @@ describe LF::FixMessage do
         end
       end
     end
+
+    context 'rejects' do
+      it 'can parse dat' do
+        [fix_4, fix_5].each do |version|
+          should_parse_fix_messages('message_types/reject.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            expect(["Reject", "REJECT"].include?(hash["MsgType"])).to be true
+            expect(hash["Text"]).to eq "Unsupported message type"
+
+            expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+          end
+        end
+      end
+    end
   end
 end
