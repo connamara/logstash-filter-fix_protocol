@@ -92,5 +92,24 @@ describe LF::FixMessage do
         end
       end
     end
+
+    context 'logon' do
+      it 'can parse dat' do
+        [fix_4, fix_5].each do |version|
+          {"BeginString"=>"FIX.4.1", "BodyLength"=>61, "MsgSeqNum"=>1, "MsgType"=>"Logon", "SenderCompID"=>"EXEC", "SendingTime"=>"20121105-23:24:06", "TargetCompID"=>"BANZAI", "EncryptMethod"=>0, "HeartBtInt"=>30, "CheckSum"=>"003"}
+          should_parse_fix_messages('message_types/logon.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            # TODO: Need to figure out difference between 4/5 version parsing
+            expect(["Logon", "LOGON"].include?(hash["MsgType"])).to be true
+
+            expect(hash["BeginString"]).to be_a String
+            # TODO: This breaks between versions 4 & 5
+            # expect([String, Fixnum].include?(hash["HeartBtInt"].class)).to be true
+
+            expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+          end
+        end
+      end
+    end
   end
 end
