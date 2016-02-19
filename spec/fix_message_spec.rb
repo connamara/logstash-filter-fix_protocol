@@ -57,4 +57,40 @@ describe LF::FixMessage do
       })
     end
   end
+
+  def should_parse_fix_messages(file_path, dictionary = "FIX42.xml", session_dictionary = nil)
+    data_dictionary = LF::DataDictionary.new(load_fixture(dictionary))
+    session_dictionary = session_dictionary.present? ? LF::DataDictionary.new(load_fixture(session_dictionary)) : data_dictionary
+
+    File.open(load_fixture(file_path), encoding: 'UTF-8') do |file|
+      file.each_entry do |line|
+        line.chomp! # remove new line character
+        message = LF::FixMessage.new(line, data_dictionary, session_dictionary)
+        yield(message.to_hash)
+      end
+    end
+  end
+
+  context 'parsing message types' do
+    let(:fix_4)  { {data_dictionary: "FIX42.xml", session_dictionary: nil} }
+    let(:fix_5)  { {data_dictionary: "FIX50SP1.xml", session_dictionary: "FIXT11.xml"} }
+    # data is from: http://fixparser.targetcompid.com/
+    context 'heartbeats' do
+      it 'can parse dat' do
+        [fix_4, fix_5].each do |version|
+          should_parse_fix_messages('message_types/heartbeat.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            expect(hash["BeginString"]).to be_a String
+            expect(hash["SendingTime"]).to be_a String
+            expect(hash["CheckSum"]).to be_a String
+            # TODO: Need to figure out difference between 4/5 version parsing
+            expect(["Heartbeat", "HEARTBEAT"].include?(hash["MsgType"])).to be true
+            expect([String, Fixnum].include?(hash["BodyLength"].class)).to be true
+            expect([String, Fixnum].include?(hash["MsgSeqNum"].class)).to be true
+            expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+          end
+        end
+      end
+    end
+  end
 end
