@@ -134,5 +134,25 @@ describe LF::FixMessage do
         end
       end
     end
+
+    context 'new order single' do
+      it 'can parse dat' do
+        [fix_4, fix_5].each do |version|
+          should_parse_fix_messages('message_types/new_order_single.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            expect(hash["ClOrdID"]).to be_a String
+            expect(hash["Symbol"]).to be_a String
+            expect(hash["TimeInForce"]).to be_a String
+            expect(hash["OrderQty"]).to be_a Float
+
+            expect(["MARKET", "LIMIT"].include?(hash["OrdType"])).to be true
+            expect(["BUY", "SELL"].include?(hash["Side"])).to be true
+            expect(hash["MsgType"]).to eq "NewOrderSingle"
+
+            expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+          end
+        end
+      end
+    end
   end
 end
