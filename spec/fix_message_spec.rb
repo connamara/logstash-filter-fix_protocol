@@ -128,8 +128,10 @@ describe LF::FixMessage do
             # expect([String, Float].include?(hash["LastShares"].class)).to be true
             expect([String, Float].include?(hash["OrderQty"].class)).to be true
 
-            expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
-            expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+            expect(hash["TargetSubID"]).to be_a(String) if hash["TargetSubID"].present?
+
+            expect(["BANZAI", "EXEC", "CQG"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC", "AIX"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
@@ -149,8 +151,8 @@ describe LF::FixMessage do
             expect(["MARKET", "LIMIT"].include?(hash["OrdType"])).to be true
             expect(["BUY", "SELL"].include?(hash["Side"])).to be true
 
-            expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
-            expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+            expect(["BANZAI", "EXEC", "AIX"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC", "CQG"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
@@ -165,12 +167,14 @@ describe LF::FixMessage do
             expect(hash["ClOrdID"]).to be_a String
             expect(hash["OrigClOrdID"]).to be_a String
             expect(hash["Symbol"]).to be_a String
-            expect(hash["OrderQty"]).to be_a Float
+
+            expect(hash["OrderQty"]).to be_a(Float) if hash["OrderQty"].present?
+            expect(["FUTURE"].include?(hash["SecurityType"])).to be(true) if hash["SecurityType"].present?
 
             expect(["BUY", "SELL"].include?(hash["Side"])).to be true
 
-            expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
-            expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+            expect(["BANZAI", "EXEC", "AIX"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC", "CQG"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
@@ -185,6 +189,24 @@ describe LF::FixMessage do
 
             expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
             expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
+          end
+        end
+      end
+    end
+
+    context 'market data snapshots' do
+      it 'can parse dat' do
+        [fix_4, fix_5].each do |version|
+          should_parse_fix_messages('message_types/market_data_snapshot.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            expect(["MarketDataSnapshotFullRefresh", "REJECT"].include?(hash["MsgType"])).to be true
+
+            expect(hash["NoMDEntries"]).to be_a(Array)
+            expect(hash["NoMDEntries"].first).to be_a(Hash)
+            expect(hash["NoMDEntries"].first["MDEntryPx"]).to be_a(Float)
+            expect(hash["NoMDEntries"].first["MDEntrySize"]).to be_a(Float) if hash["NoMDEntries"].first["MDEntrySize"].present?
+
+            expect(["CQG"].include?(hash["TargetCompID"])).to be true
+            expect(["AIX"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
