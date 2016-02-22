@@ -42,14 +42,7 @@ module LogStash
 
           fix_hash.each do |key, value|
             begin
-              case
-              when value.is_a?(Hash)
-                # TODO: Iterate
-              when value.is_a?(Array)
-                # TODO: Again
-              else
-                event[key] = value
-              end
+              event[key] = value
             rescue NoMethodError => e
               puts "********"
               puts "WARNING: Could not correctly parse #{event["fix_message"]}"
@@ -63,10 +56,6 @@ module LogStash
         end
         # filter_matched should go in the last line of our successful code
         filter_matched(event)
-      end
-
-      def assign_vars(object)
-        # TODO: potential recursive function
       end
     end
   end
