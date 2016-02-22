@@ -4,7 +4,7 @@
 # Note, we needed gcc to configure/make nailgun server
 
 # use of binstubs over bundle exec, to generate: `bundle binstub rspec-core`
-LOGSTASH="/opt/logstash/bin/logstash"
+LOGSTASH="logstash"
 
 # Disable runtime optimization with JRUBY_OPTS
 # export JAVACMD=`which drip`
