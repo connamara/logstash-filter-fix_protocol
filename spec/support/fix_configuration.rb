@@ -6,10 +6,10 @@ module FixConfiguration
   def fix_5_configuration
     <<-CONFIG
       filter {
-        fix_message {
-          message => ["message"]
-          session_dictionary_path = "#{ load_fixture("FIXT11.xml") }"
-          data_dictionary_path = "#{ load_fixture("FIX50SP1.xml") }"
+        fix_message_filter {
+          message => fix_message
+          session_dictionary_path => "#{ load_fixture("FIXT11.xml") }"
+          data_dictionary_path => "#{ load_fixture("FIX50SP1.xml") }"
         }
       }
     CONFIG
@@ -18,8 +18,8 @@ module FixConfiguration
   def fix_4_configuration
     <<-CONFIG
       filter {
-        fix_message {
-          message => ["message"]
+        fix_message_filter {
+          message => fix_message
           data_dictionary_path => "#{ load_fixture("FIX42.xml") }"
         }
       }

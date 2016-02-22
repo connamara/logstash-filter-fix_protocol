@@ -10,10 +10,10 @@ module LogStash
 
       attr_reader :data_dictionary, :session_dictionary
 
-      config_name "fix_message"
+      config_name "fix_message_filter"
 
       # TODO: I really don't understand what's this doing in relation to event var passed to filter
-      config :message, validate: :array, default: []
+      config :message, validate: :string, default: "Hello"
 
       config :data_dictionary_path, validate: :string, default: "/PATH/TO/YOUR/DD"
       config :session_dictionary_path, validate: :string, default: nil
@@ -34,30 +34,28 @@ module LogStash
       end
 
       def filter(event)
-        if @message
+        if event["fix_message"]
           # Replace the event message with our message as configured in the config file.
-          fix_message = FixMessage.new(event["message"], data_dictionary, session_dictionary)
-
+          fix_message = FixMessage.new(event["fix_message"], data_dictionary, session_dictionary)
           # TODO: Iterate through JSON key / value pairs and)
-          fix_message.to_hash.each do |key, value|
-            case
-            when value.is_a?(Hash)
-              # TODO: Iterate
-            when value.is_a?(Array)
-              # TODO: Again
-            else
+          fix_hash = fix_message.to_hash
+
+          fix_hash.each do |key, value|
+            begin
               event[key] = value
+            rescue NoMethodError => e
+              puts "********"
+              puts "WARNING: Could not correctly parse #{event["fix_message"]}"
+              puts JSON.pretty_generate(fix_hash)
+              puts "Message: #{e.message}"
+              puts "********"
+            ensure
+              next
             end
           end
-
         end
-
         # filter_matched should go in the last line of our successful code
         filter_matched(event)
-      end
-
-      def assign_vars(object)
-        # TODO: potential recursive function
       end
     end
   end
