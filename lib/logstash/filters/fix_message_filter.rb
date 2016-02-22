@@ -10,10 +10,10 @@ module LogStash
 
       attr_reader :data_dictionary, :session_dictionary
 
-      config_name "fix_message"
+      config_name "fix_message_filter"
 
       # TODO: I really don't understand what's this doing in relation to event var passed to filter
-      config :message, validate: :array, default: []
+      config :message, validate: :string, default: "Hello"
 
       config :data_dictionary_path, validate: :string, default: "/PATH/TO/YOUR/DD"
       config :session_dictionary_path, validate: :string, default: nil
