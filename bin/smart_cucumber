@@ -4,12 +4,12 @@
 # Note, we needed gcc to configure/make nailgun server
 
 # use of binstubs over bundle exec, to generate: `bundle binstub rspec-core`
-RSPEC="./bin/rspec"
+CUKES="./bin/cucumber"
 
 # Disable runtime optimization with JRUBY_OPTS
 export JRUBY_OPTS="-Xcompile.invokedynamic=false -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-noverify -Xcompile.mode=OFF"
 
-CMD="$RSPEC $@"
+CMD="$CUKES $@"
 echo $CMD
 $CMD
 
