@@ -12,7 +12,6 @@ module LogStash
 
       config_name "fix_message_filter"
 
-      # TODO: I really don't understand what's this doing in relation to event var passed to filter
       config :message, validate: :string, default: "Hello"
 
       config :data_dictionary_path, validate: :string, default: "/PATH/TO/YOUR/DD"
@@ -24,6 +23,7 @@ module LogStash
         fail "Need to configure a valid data dictionary path" unless config["data_dictionary_path"]
 
         @data_dictionary = DataDictionary.new(config["data_dictionary_path"])
+
         # Set session data dictionary variable if using > FIX 5.0
         session_dict = config["session_dictionary_path"]
         @session_dictionary = session_dict.present? ? DataDictionary.new(session_dict) : @data_dictionary
@@ -35,9 +35,8 @@ module LogStash
 
       def filter(event)
         if event["fix_message"]
-          # Replace the event message with our message as configured in the config file.
           fix_message = FixMessage.new(event["fix_message"], data_dictionary, session_dictionary)
-          # TODO: Iterate through JSON key / value pairs and)
+
           fix_hash = fix_message.to_hash
 
           fix_hash.each do |key, value|
