@@ -211,5 +211,16 @@ describe LF::FixMessage do
         end
       end
     end
+
+    context 'human-readable group enums' do
+      it 'can parse dat' do
+        [fix_4, fix_5].each do |version|
+          should_parse_fix_messages('message_types/market_data_snapshot.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+            binding.pry
+            expect(["BID", "OFFER", "INDEX_VALUE"].include?(hash["NoMDEntries"].first["MDEntryType"])).to be true
+          end
+        end
+      end
+    end
   end
 end
