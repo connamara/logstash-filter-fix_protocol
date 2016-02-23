@@ -27,7 +27,7 @@ vagrant up
 + `bundle install`
 + `brew install logstash`
 
-Then, run `bin/smart_console` for an interactive prompt that will allow you to experiment.
+Then, run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To release a new version, update the **version number** in `logstash-filter-fix_message_filter.gemspec`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
@@ -35,7 +35,7 @@ To release a new version, update the **version number** in `logstash-filter-fix_
 
 ```
 # We're exporting JRUBY_OPTS to the JVM for faster boot
-$ ./bin/smart_rspec
+$ ./bin/rspec rspec
 ```
 
 ## Installation
