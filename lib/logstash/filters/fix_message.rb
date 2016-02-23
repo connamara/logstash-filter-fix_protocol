@@ -4,7 +4,7 @@ require 'active_support/core_ext'
 module LogStash
   module Filters
     class FixMessage < quickfix.Message
-      attr_reader :type, :msg_string, :header, :trailer, :session_dictionary, :data_dictionary, :parsed_string, :all_dictionaries
+      attr_reader :type, :msg_string, :session_dictionary, :data_dictionary, :all_dictionaries
 
       def initialize(msg_string, data_dictionary, session_dictionary)
         @session_dictionary = session_dictionary
@@ -17,9 +17,6 @@ module LogStash
         @all_dictionaries = [@data_dictionary, @session_dictionary]
 
         super(msg_string, data_dictionary, false)
-
-        @header = self.get_header
-        @trailer = self.get_trailer
       end
 
       def is_admin?
@@ -31,12 +28,12 @@ module LogStash
         # TODO: This logic / parsing might make sense in quickfix-j / java world
         # Then, from here, we could inherit from quickfix.Message and call `JSON.parse(self.to_json)`
         # OR: Might want to move all this to ruby
-        # dd = Hash.from_xml(load_fixture("FIX50SP1.xml"))
-        header_msg  = field_map_to_hash(header)
+        # dd = Hash.from_xml(load_fixture("FIX50SP1.xml")) || https://github.com/jnunemaker/crack
+        header_msg  = field_map_to_hash(self.get_header)
         body_msg    = field_map_to_hash(self, type)
         trailer_msg = field_map_to_hash(trailer)
 
-        header_msg.merge(body_msg).merge(trailer_msg)
+        header_msg.merge(body_msg).merge(self.get_trailer)
       end
 
       private

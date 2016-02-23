@@ -10,6 +10,7 @@ module LogStash
 
         super(file_path)
       end
+
     end
   end
 end
