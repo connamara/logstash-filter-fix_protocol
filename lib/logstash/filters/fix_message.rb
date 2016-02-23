@@ -63,39 +63,39 @@ module LogStash
           tag = field.get_tag
           value = field.get_value
 
-          if data_dictionary.present?
-            if msg_type.present? and data_dictionary.is_group(msg_type, tag)
-              group_dd = data_dictionary.get_group(msg_type, tag).get_data_dictionary
-              groups = []
+          if msg_type.present? and data_dictionary.is_group(msg_type, tag)
+            group_dd = data_dictionary.get_group(msg_type, tag).get_data_dictionary
+            groups = []
 
-              for i in 1..value.to_i
-                group_map = field_map.get_group(i, tag)
-                groups << field_map_to_hash(group_map, group_dd, msg_type, all_dictionaries << group_dd)
-              end
-
-              value = groups
-            elsif data_dictionary.is_field(tag)
-              f_type = field_type(tag, all_dictionaries)
-
-              value =
-                case f_type
-                  when "INT", "DAYOFMONTH" then value.to_i
-                  when "PRICE", "FLOAT", "QTY" then value.to_f
-                  when "BOOLEAN" then value == "Y"
-                  when "NUMINGROUP" then field_map.to_hash(value)
-                  else
-                    value_name = data_dictionary.get_value_name(tag, value)
-                    value_name.present? ? value_name : value
-                end
+            for i in 1..value.to_i
+              group_map = field_map.get_group(i, tag)
+              groups << field_map_to_hash(group_map, group_dd, msg_type, all_dictionaries << group_dd)
             end
-            tag = field_name(tag, all_dictionaries)
+
+            value = groups
+          elsif data_dictionary.is_field(tag)
+            f_type = field_type(tag, all_dictionaries)
+
+            value =
+              case f_type
+                when "INT", "DAYOFMONTH" then value.to_i
+                when "PRICE", "FLOAT", "QTY" then value.to_f
+                when "BOOLEAN" then value == "Y"
+                when "NUMINGROUP" then field_map.to_hash(value)
+                else
+                  value_name = data_dictionary.get_value_name(tag, value)
+                  value_name.present? ? value_name : value
+              end
           end
+
+          tag = field_name(tag, all_dictionaries)
 
           hash[tag] = value
         end
 
         hash
       end
+
     end
   end
 end
