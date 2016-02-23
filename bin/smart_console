@@ -4,16 +4,12 @@
 # Note, we needed gcc to configure/make nailgun server
 
 # use of binstubs over bundle exec, to generate: `bundle binstub rspec-core`
-LOGSTASH="logstash"
+CONSOLE="./bin/console"
 
 # Disable runtime optimization with JRUBY_OPTS
-# export JAVACMD=`which drip`
+export JRUBY_OPTS="-Xcompile.invokedynamic=false -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-noverify -Xcompile.mode=OFF"
 
-CMD="$LOGSTASH $@"
+CMD="$CONSOLE $@"
 echo $CMD
 $CMD
 
-## Commands
-# 1. Start nailgun server `ruby --ng-server &`
-# 2. './bin/smart_rspec'
-# 3. To kill ng-server: `lsof -i tcp:2113` and kill PID
