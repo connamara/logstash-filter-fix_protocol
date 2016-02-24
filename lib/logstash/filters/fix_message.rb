@@ -29,11 +29,11 @@ module LogStash
         # Then, from here, we could inherit from quickfix.Message and call `JSON.parse(self.to_json)`
         # OR: Might want to move all this to ruby
         # dd = Hash.from_xml(load_fixture("FIX50SP1.xml")) || https://github.com/jnunemaker/crack
-        header_msg  = field_map_to_hash(self.get_header)
+        header_msg  = field_map_to_hash(self.header)
         body_msg    = field_map_to_hash(self, type)
-        trailer_msg = field_map_to_hash(trailer)
+        trailer_msg = field_map_to_hash(self.trailer)
 
-        header_msg.merge(body_msg).merge(self.get_trailer)
+        header_msg.merge(body_msg).merge(trailer_msg)
       end
 
       private
