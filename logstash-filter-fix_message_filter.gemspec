@@ -10,12 +10,12 @@ Gem::Specification.new do |s|
 
   s.summary       = "FIX protocol logstash filter"
   s.description   = "Put your financial application logs to work with logstash FIX filtering"
-  s.homepage      = "TODO: [gem's public repo URL]"
-  s.license       = "MIT"
+  s.homepage      = "https://github.com/connamara/logstash-filter-fix_message"
+  s.licenses      = ['Apache License (2.0)']
 
   s.files         = Dir['lib/**/*','vendor/**/*','*.gemspec','*.md','CONTRIBUTORS','Gemfile','LICENSE','NOTICE.TXT', 'spec/**/*', 'features/**/*']
 
-  s.test_files = s.files.grep(%r{^(spec|features)/})
+  s.test_files    = s.files.grep(%r{^(spec|features)/})
 
   s.require_paths = ["lib"]
 
