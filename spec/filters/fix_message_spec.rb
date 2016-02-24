@@ -130,8 +130,8 @@ describe LF::FixMessage do
 
             expect(hash["TargetSubID"]).to be_a(String) if hash["TargetSubID"].present?
 
-            expect(["BANZAI", "EXEC", "INST_B"].include?(hash["TargetCompID"])).to be true
-            expect(["BANZAI", "EXEC", "INST_A"].include?(hash["SenderCompID"])).to be true
+            expect(["BANZAI", "EXEC", "CQG"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC", "AIX"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
@@ -151,8 +151,8 @@ describe LF::FixMessage do
             expect(["MARKET", "LIMIT"].include?(hash["OrdType"])).to be true
             expect(["BUY", "SELL"].include?(hash["Side"])).to be true
 
-            expect(["BANZAI", "EXEC", "INST_A"].include?(hash["TargetCompID"])).to be true
-            expect(["BANZAI", "EXEC", "INST_B"].include?(hash["SenderCompID"])).to be true
+            expect(["BANZAI", "EXEC", "DUMMY_INC"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC", "ANOTHER_INC"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
@@ -173,8 +173,8 @@ describe LF::FixMessage do
 
             expect(["BUY", "SELL"].include?(hash["Side"])).to be true
 
-            expect(["BANZAI", "EXEC", "INST_A"].include?(hash["TargetCompID"])).to be true
-            expect(["BANZAI", "EXEC", "INST_B"].include?(hash["SenderCompID"])).to be true
+            expect(["BANZAI", "EXEC", "DUMMY_INC"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC", "ANOTHER_INC"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
@@ -205,8 +205,8 @@ describe LF::FixMessage do
             expect(hash["NoMDEntries"].first["MDEntryPx"]).to be_a(Float)
             expect(hash["NoMDEntries"].first["MDEntrySize"]).to be_a(Float) if hash["NoMDEntries"].first["MDEntrySize"].present?
 
-            expect(["INST_B"].include?(hash["TargetCompID"])).to be true
-            expect(["INST_A"].include?(hash["SenderCompID"])).to be true
+            expect(["ANOTHER_INC"].include?(hash["TargetCompID"])).to be true
+            expect(["DUMMY_INC"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
