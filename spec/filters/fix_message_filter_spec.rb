@@ -56,13 +56,13 @@ describe LF::FixMessageFilter do
   context 'it removes unparseable key-value pairs' do
     config fix_5_configuration
 
-    execution = "8=FIX.4.2\x019=240\x0135=8\x0134=6\x0149=INST_A\x0152=20150826-23:10:17.744\x0156=INST_B\x0157=Firm_B\x011=Inst_B\x016=0\x0111=151012569\x0117=ITRZ1201508261_24\x0120=0\x0122=8\x0131=1010\x0132=5\x0137=ITRZ1201508261_12\x0138=5\x0139=2\x0140=2\x0141=best_buy\x0144=1011\x0154=1\x0155=ITRZ1\x0160=20150826-23:10:15.547\x01150=2\x01151=0\x0110=227\x01"
+    execution = "8=FIX.4.2\x019=240\x0135=8\x0134=6\x0149=DUMMY_INC\x0152=20150826-23:10:17.744\x0156=ANOTHER_INC\x0157=Firm_B\x011=Inst_B\x016=0\x0111=151012569\x0117=ITRZ1201508261_24\x0120=0\x0122=8\x0131=1010\x0132=5\x0137=ITRZ1201508261_12\x0138=5\x0139=2\x0140=2\x0141=best_buy\x0144=1011\x0154=1\x0155=ITRZ1\x0160=20150826-23:10:15.547\x01150=2\x01151=0\x0110=227\x01"
 
     sample("fix_message" => execution) do
       filtered_event = subject
       insist { filtered_event["BeginString"] } == "FIX.4.2"
       insist { filtered_event["MsgType"] } == "ExecutionReport"
-      insist { filtered_event["SenderCompID"] } == "INST_A"
+      insist { filtered_event["SenderCompID"] } == "DUMMY_INC"
       insist { filtered_event["AvgPx"] } == 0.0
       insist { filtered_event["OrdType"] } == "LIMIT"
       insist { filtered_event["LeavesQty"] } == 0.0 # this should fail if parsing gets rescued, but doesnt finish setting on the event object
