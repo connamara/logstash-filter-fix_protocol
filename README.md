@@ -1,4 +1,4 @@
-# Fix Message Logstash Filter
+# FIX Message Logstash Filter
 
 A LogStash filter plugin for FIX Message parsing
 
@@ -93,8 +93,10 @@ Notice, we're using the Grok filter to create a `fix_message` variable from a th
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/fix_logstash_plugin/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Contributions are welcome!  Please see the [Contribution Guidelines](CONTRIBUTING.md) for details.
+
+![Connamara Systems](http://www.connamara.com/wp-content/uploads/2016/01/connamara_logo_dark.png)
+
+FIX Message Logstash Filter is maintained and funded by [Connamara Systems, llc](http://connamara.com).
+
+The names and logos for Connamara Systems are trademarks of Connamara Systems, llc.
