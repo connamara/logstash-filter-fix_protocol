@@ -130,8 +130,8 @@ describe LF::FixMessage do
 
             expect(hash["TargetSubID"]).to be_a(String) if hash["TargetSubID"].present?
 
-            expect(["BANZAI", "EXEC", "CQG"].include?(hash["TargetCompID"])).to be true
-            expect(["BANZAI", "EXEC", "AIX"].include?(hash["SenderCompID"])).to be true
+            expect(["BANZAI", "EXEC", "INST_B"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC", "INST_A"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
