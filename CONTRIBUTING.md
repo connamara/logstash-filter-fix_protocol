@@ -2,7 +2,7 @@
 
 Thanks for taking the time to contribute to FIX Message Logstash Filter!
 
-If you come across any issues, please [tell us](https://github.com/connamara/logstash-filter-fix_message/issues).
+If you come across any issues, please [tell us](https://github.com/connamara/logstash-filter-fix_message_filter/issues).
 Pull requests (with tests) are appreciated. No pull request is too small. Please help with:
 
 * Reporting bugs
@@ -12,16 +12,16 @@ Pull requests (with tests) are appreciated. No pull request is too small. Please
 * Cleaning whitespace
 * Refactoring code
 * Adding tests
-* Closing [issues](https://github.com/connamara/logstash-filter-fix_message/issues)
+* Closing [issues](https://github.com/connamara/logstash-filter-fix_message_filter/issues)
 
 
 ## Before you contribute
 
-* Did you find a bug?  **Ensure the bug was not already reported** by searching on Github under [Issues](https://github.com/connamara/quickfixn/issues).
+* Did you find a bug?  **Ensure the bug was not already reported** by searching on Github under [Issues](https://github.com/connamara/logstash-filter-fix_message_filter/issues).
 
 ## Steps to Contribute:
 
-1. Fork the [official repository](https://github.com/connamara/logstash-filter-fix_message/).
+1. Fork the [official repository](https://github.com/connamara/logstash-filter-fix_message_filter/).
 2. Make your changes in a topic branch.
 3. Send a pull request.
 4. If you are new contributor to this project, sign the CLA

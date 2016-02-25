@@ -100,3 +100,11 @@ Contributions are welcome!  Please see the [Contribution Guidelines](CONTRIBUTIN
 FIX Message Logstash Filter is maintained and funded by [Connamara Systems, llc](http://connamara.com).
 
 The names and logos for Connamara Systems are trademarks of Connamara Systems, llc.
+
+## Licensing
+
+FIX Message Logstash Filter is Copyright © 2016 Connamara Systems, llc.
+
+This software is available under the Apache license and a commercial license.  Please see the [LICENSE](LICENSE.txt) file for the terms specified by the Apache license.  The commercial license offers more flexible licensing terms compared to the Apache license, and includes support services.  [Contact us](mailto:info@connamara.com) for more information on the Connamara commercial license, what it enables, and how you can start commercial development with it.
+
+This product includes software developed by quickfixengine.org ([http://www.quickfixengine.org/](http://www.quickfixengine.org/)). Please see the [QuickFIX Software LICENSE](QUICKFIX_LICENSE.txt) for the terms specified by the QuickFIX Software License.
