@@ -9,18 +9,6 @@ describe LF::FixMessage do
   let(:message) { LF::FixMessage.new(message_str, data_dictionary, session_dictionary) }
   let(:message2) { LF::FixMessage.new(another_str, data_dictionary, session_dictionary) }
 
-  describe '#type' do
-    it 'returns the message type' do
-      expect(message.type).to eq "8"
-    end
-  end
-
-  describe '#is_admin?' do
-    it 'returns whether the message is an admin message' do
-      expect(message.is_admin?).to eq false
-    end
-  end
-
   describe '#to_hash' do
     it 'converts the FIX message string to a hash in human readable format' do
       expect(message.to_hash).to eq({

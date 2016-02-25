@@ -12,16 +12,9 @@ module LogStash
         @msg_string = msg_string
         @type = quickfix.MessageUtils.getMessageType(msg_string)
 
-        payload_dict = self.is_admin? ? session_dictionary : data_dictionary
-
         @all_dictionaries = [@data_dictionary, @session_dictionary]
 
         super(msg_string, data_dictionary, false)
-      end
-
-      def is_admin?
-        # AKA - use session dictionary || use app dictionary
-        quickfix.MessageUtils.isAdminMessage(@type)
       end
 
       def to_hash

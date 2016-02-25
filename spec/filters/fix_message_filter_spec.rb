@@ -37,7 +37,6 @@ describe LF::FixMessageFilter do
   end
 
   context 'an incoming execution report' do
-    # TODO: Add Grok Regexp to capture individual FIX messages from logging FIX format
     config fix_4_configuration
 
     execution = "8=FIXT.1.1\x0135=8\x0149=ITG\x0156=SILO\x01315=8\x016=100.25\x01410=50.25\x01424=23.45\x01411=Y\x0143=N\x0140=1\x015=N\x01"
