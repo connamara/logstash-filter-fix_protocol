@@ -19,17 +19,8 @@
     dest=/home/vagrant/.bashrc
     line="export JAVA_HOME={{ java_home.stdout }}"
 
-- name: installing additional dependencies
-  yum: name={{ item }} state=present
-  with_items:
-    - git
-    - lsof
-    - libtool
-    - gcc-c++
-    - libxml2
-    - libxml2-devel
-    - libxslt
-    - libxslt-devel
+- name: installing git
+  yum: name=git state=present
 
 - name: ntp
   yum: name=ntp state=present
