@@ -111,21 +111,21 @@ describe LF::FixMessage do
             expect(["BUY", "SELL"].include?(hash["Side"])).to be true
 
             expect([String, Float].include?(hash["LastPx"].class)).to be true
-            # TODO: This breaks between versions 4 & 5
+            # NOTE: This field was changed between FIX 4 / 5
             # expect([String, Float].include?(hash["LastShares"].class)).to be true
             expect([String, Float].include?(hash["OrderQty"].class)).to be true
 
             expect(hash["TargetSubID"]).to be_a(String) if hash["TargetSubID"].present?
 
-            expect(["BANZAI", "EXEC", "INST_B"].include?(hash["TargetCompID"])).to be true
-            expect(["BANZAI", "EXEC", "INST_A"].include?(hash["SenderCompID"])).to be true
+            expect(["BANZAI", "EXEC", "ANOTHER_INC"].include?(hash["TargetCompID"])).to be true
+            expect(["BANZAI", "EXEC", "DUMMY_INC"].include?(hash["SenderCompID"])).to be true
           end
         end
       end
     end
 
     context 'new order single' do
-      it 'can parse dat' do
+      it 'can parse these' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/new_order_single.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
             expect(hash["MsgType"]).to eq "NewOrderSingle"
