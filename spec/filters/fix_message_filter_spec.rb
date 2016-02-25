@@ -37,7 +37,6 @@ describe LF::FixMessageFilter do
   end
 
   context 'an incoming execution report' do
-    # TODO: Add Grok Regexp to capture individual FIX messages from logging FIX format
     config fix_4_configuration
 
     execution = "8=FIXT.1.1\x0135=8\x0149=ITG\x0156=SILO\x01315=8\x016=100.25\x01410=50.25\x01424=23.45\x01411=Y\x0143=N\x0140=1\x015=N\x01"
@@ -59,6 +58,7 @@ describe LF::FixMessageFilter do
     execution = "8=FIX.4.2\x019=240\x0135=8\x0134=6\x0149=DUMMY_INC\x0152=20150826-23:10:17.744\x0156=ANOTHER_INC\x0157=Firm_B\x011=Inst_B\x016=0\x0111=151012569\x0117=ITRZ1201508261_24\x0120=0\x0122=8\x0131=1010\x0132=5\x0137=ITRZ1201508261_12\x0138=5\x0139=2\x0140=2\x0141=best_buy\x0144=1011\x0154=1\x0155=ITRZ1\x0160=20150826-23:10:15.547\x01150=2\x01151=0\x0110=227\x01"
 
     sample("fix_message" => execution) do
+      expect { subject }.to output.to_stdout
       filtered_event = subject
       insist { filtered_event["BeginString"] } == "FIX.4.2"
       insist { filtered_event["MsgType"] } == "ExecutionReport"
