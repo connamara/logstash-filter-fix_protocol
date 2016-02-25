@@ -59,15 +59,14 @@ describe LF::FixMessage do
     end
   end
 
-  context 'parsing message types' do
+  context 'message types' do
     let(:fix_4)  { {data_dictionary: "FIX42.xml", session_dictionary: nil} }
     let(:fix_5)  { {data_dictionary: "FIX50SP1.xml", session_dictionary: "FIXT11.xml"} }
     # data is from: http://fixparser.targetcompid.com/
     context 'heartbeats' do
-      it 'can parse dat' do
+      it 'can parse these' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/heartbeat.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
-            # TODO: Need to figure out difference between 4/5 version parsing
             expect(["Heartbeat", "HEARTBEAT"].include?(hash["MsgType"])).to be true
 
             expect(hash["BeginString"]).to be_a String
@@ -83,13 +82,13 @@ describe LF::FixMessage do
     end
 
     context 'logon' do
-      it 'can parse dat' do
+      it 'can parse these' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/logon.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
             expect(["Logon", "LOGON"].include?(hash["MsgType"])).to be true
 
             expect(hash["BeginString"]).to be_a String
-            # TODO: This breaks between versions 4 & 5
+            # NOTE: This field was changed between FIX 4 / 5
             # expect([String, Fixnum].include?(hash["HeartBtInt"].class)).to be true
 
             expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
@@ -100,7 +99,7 @@ describe LF::FixMessage do
     end
 
     context 'execution_report' do
-      it 'can parse dat' do
+      it 'can parse these' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/execution_report.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
             expect(["ExecutionReport"].include?(hash["MsgType"])).to be true
@@ -147,7 +146,7 @@ describe LF::FixMessage do
     end
 
     context 'order cancel request' do
-      it 'can parse dat' do
+      it 'can parse these' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/order_cancel_request.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
             expect(hash["MsgType"]).to eq "OrderCancelRequest"
@@ -169,7 +168,7 @@ describe LF::FixMessage do
     end
 
     context 'rejects' do
-      it 'can parse dat' do
+      it 'can parse these' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/reject.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
             expect(["Reject", "REJECT"].include?(hash["MsgType"])).to be true
@@ -183,7 +182,7 @@ describe LF::FixMessage do
     end
 
     context 'market data snapshots' do
-      it 'can parse dat' do
+      it 'can parse these' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/market_data_snapshot.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
             expect(["MarketDataSnapshotFullRefresh", "REJECT"].include?(hash["MsgType"])).to be true
@@ -201,7 +200,7 @@ describe LF::FixMessage do
     end
 
     context 'human-readable group enums' do
-      it 'can parse dat' do
+      it 'can parse these' do
         [fix_4, fix_5].each do |version|
           should_parse_fix_messages('message_types/market_data_snapshot.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
             expect(["BID", "OFFER", "INDEX_VALUE"].include?(hash["NoMDEntries"].first["MDEntryType"])).to be true
