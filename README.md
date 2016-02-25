@@ -16,7 +16,16 @@ The FIX Message filter plugin can read the FIX log as an input and turn it into 
 
 ## Development Environment
 
-### Vagrant
+To get set up quickly, we recommend using Vagrant with the Ansible provisioning available in this source repository.
+
+### Setup with Vagrant
+
+* Install [Ansible](http://www.ansible.com/)
+* Install [VirtualBox](https://www.virtualbox.org)
+* Install [Vagrant](http://www.vagrantup.com/)
+
+Then,
+
 ```
 vagrant up
 ```
