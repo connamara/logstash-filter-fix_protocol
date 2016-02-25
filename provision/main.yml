@@ -9,7 +9,7 @@
 
   roles:
     - { role: common, sudo: yes }
-    - { role: geerlingguy.logstash, sudo: yes }
+    - { role: logstash, sudo: yes }
     - { role: rvm_io.rvm1-ruby, sudo: yes }
 
   tasks:
