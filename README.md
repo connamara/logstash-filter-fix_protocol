@@ -106,7 +106,7 @@ To release a new version, update the **version number** in `logstash-filter-fix_
 $ ./bin/rspec rspec
 ```
 
-### Logstash Installation - Local Development
+### Development Logstash Installation
 
 1. Add the filter to your installation of LogStash
 
