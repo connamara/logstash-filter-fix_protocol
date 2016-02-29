@@ -100,6 +100,8 @@ Then, run `bin/console` for an interactive prompt that will allow you to experim
 
 To release a new version, update the **version number** in `logstash-filter-fix_message_filter.gemspec`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+*Note: If you get an error message about metadata, you'll need to update to ruby gems > 2.0. Run `gem update --system`*
+
 ### Running Tests
 
 ```
