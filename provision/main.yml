@@ -30,11 +30,3 @@
 
     - name: Main | Install the File LogStash Plugin
       shell: bin/plugin install logstash-input-file chdir=/opt/logstash/
-
-    - name: Main | Check RubyGems version
-      register: ruby_gems_version
-      shell: sudo -iu {{ ansible_ssh_user }} gem --version
-
-    - name: Main | Update RubyGems
-      shell: sudo -iu {{ ansible_ssh_user }} gem update --system "2.5.2"
-      when: ruby_gems_version.stdout != "2.5.2"
