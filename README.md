@@ -14,6 +14,66 @@ The FIX Message filter plugin can read the FIX log as an input and turn it into 
 
 ![alt tag](http://i.imgur.com/gkeStss.png)
 
+## Installation
+```
+$ /opt/logstash/bin/plugin install logstash-filter-fix_message_filter
+```
+
+## Plugin Configuration
+
+| Setting                 | Input type      | Required | Default Value      |
+| ----------------------- | ----------------| ---------| ------------------ |
+| message                 | string/variable | Yes      | "Fix String"       |
+| data_dictionary_path    | string          | Yes      | "/PATH/TO/YOUR/DD" |
+| session_dictionary_path | string          | No       | nil                |
+
+**message**
++ value type is a string
++ required
+
+Should be the actual fix message passed to the filter. You might need to use a separate filter, like grok, to parse a log and set a fix string variable.
+
+**data_dictionary_path**
++ value type is a string
++ required
+
+Should be the absolute path to your data dictionary xml file.
+
+**session_dictionary_path**
++ value type is a string
++ Not required
+
+Should be the absolute path to your session dictionary xml file for FIX versions > 5.0. Note, if you do not set this but are using FIX 5.0, the filter will still work, but admin messages won't be correctly parsed - you'll lose data. The filter ignores key-value pairs that it doesn't parse correctly.
+
+**Sample Config File**
+
+*Note: For FIX < 5.0, simply omit the `session_dictionary_path`.*
+
+```
+input {
+  file {
+    path => "/PATH/TO/YOUR/FIX-MESSAGE.log"
+    start_position => "beginning"
+  }
+}
+filter {
+  grok {
+    match => ["message","%{TIMESTAMP_ISO8601:timestamp} %{GREEDYDATA:fix_string}: %{GREEDYDATA:fix_message}"]
+  }
+  fix_message_filter {
+    message => fix_message
+    session_dictionary_path => "/PATH/TO/FIX/5.0/SESSION/DICTIONARY/FIX.xml"
+    data_dictionary_path => "/PATH/TO/FIX/5.0/DATA/DICTIONARY/FIX.xml"
+  }
+}
+output {
+  stdout { codec => rubydebug }
+}
+
+```
+
+Notice, we're using the Grok filter to create a `fix_message` variable from a theoretical FIX Message log file. Then, we're passing that variable to our filter. You can see this emulated behavior in our specs.
+
 ## Development Environment
 
 To get set up quickly, we recommend using Vagrant with the Ansible provisioning available in this source repository.
@@ -43,62 +103,32 @@ To release a new version, update the **version number** in `logstash-filter-fix_
 ### Running Tests
 
 ```
-# We're exporting JRUBY_OPTS to the JVM for faster boot
 $ ./bin/rspec rspec
 ```
 
-## Installation
+### Development Logstash Installation
 
 1. Add the filter to your installation of LogStash
 
-```ruby
-# /opt/logstash/Gemfile
-#...
-gem "logstash-output-kafka"
-gem "logstash-input-http_poller"
-gem "logstash-filter-fix_message_filter"
-```
+    ```ruby
+    # /opt/logstash/Gemfile
+    #...
+    gem "logstash-output-kafka"
+    gem "logstash-input-http_poller"
+    gem "logstash-filter-fix_message_filter", :path => "/PATH/TO/YOUR/FORK"
+    ```
 
 2. Install the filter plugin
 
-```
-$ /opt/logstash/bin/plugin install
-```
+    ```
+    $ /opt/logstash/bin/plugin install --no-verify
+    ```
 
 3. Start logstash installation with a LogStash configuration file.
 
-```
-$ /opt/logstash/bin/logstash -f /PATH/TO/logstash.conf
-```
-
-## Plugin Configuration
-
-A sample FIX 5.0 would look something like the below. For FIX < 5.0, simply omit the `session_dictionary_path` and supply a `data_dictionary_path`.
-
-```
-input {
-  file {
-    path => "/PATH/TO/YOUR/FIX-MESSAGE.log"
-    start_position => "beginning"
-  }
-}
-filter {
-  grok {
-    match => ["message","%{TIMESTAMP_ISO8601:timestamp} %{GREEDYDATA:fix_string}: %{GREEDYDATA:fix_message}"]
-  }
-  fix_message_filter {
-    message => fix_message
-    session_dictionary_path => "/PATH/TO/FIX/5.0/SESSION/DICTIONARY/FIX.xml"
-    data_dictionary_path => "/PATH/TO/FIX/5.0/DATA/DICTIONARY/FIX.xml"
-  }
-}
-output {
-  stdout { codec => rubydebug }
-}
-
-```
-
-Notice, we're using the Grok filter to create a `fix_message` variable from a theoretical FIX Message log file. Then, we're passing that variable to our filter. You can see this emulated behavior in our specs.
+    ```
+    $ /opt/logstash/bin/logstash -f /PATH/TO/logstash.conf
+    ```
 
 ## Contributing
 
