@@ -14,66 +14,40 @@ The FIX Message filter plugin can read the FIX log as an input and turn it into 
 
 ![alt tag](http://i.imgur.com/gkeStss.png)
 
-## Development Environment
-
-To get set up quickly, we recommend using Vagrant with the Ansible provisioning available in this source repository.
-
-### Setup with Vagrant
-
-* Install [Ansible](http://www.ansible.com/)
-* Install [VirtualBox](https://www.virtualbox.org)
-* Install [Vagrant](http://www.vagrantup.com/)
-
-Then,
-
-```
-vagrant up
-```
-
-### Manual Setup (OSX)
-+ `rvm install jruby`
-+ `rvm use jruby`
-+ `bundle install`
-+ `brew install logstash`
-
-Then, run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To release a new version, update the **version number** in `logstash-filter-fix_message_filter.gemspec`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-### Running Tests
-
-```
-# We're exporting JRUBY_OPTS to the JVM for faster boot
-$ ./bin/rspec rspec
-```
-
 ## Installation
-
-1. Add the filter to your installation of LogStash
-
-```ruby
-# /opt/logstash/Gemfile
-#...
-gem "logstash-output-kafka"
-gem "logstash-input-http_poller"
-gem "logstash-filter-fix_message_filter"
 ```
-
-2. Install the filter plugin
-
-```
-$ /opt/logstash/bin/plugin install
-```
-
-3. Start logstash installation with a LogStash configuration file.
-
-```
-$ /opt/logstash/bin/logstash -f /PATH/TO/logstash.conf
+$ /opt/logstash/bin/plugin install logstash-filter-fix_message_filter
 ```
 
 ## Plugin Configuration
 
-A sample FIX 5.0 would look something like the below. For FIX < 5.0, simply omit the `session_dictionary_path` and supply a `data_dictionary_path`.
+| Setting                 | Input type      | Required | Default Value      |
+| ----------------------- | ----------------| ---------| ------------------ |
+| message                 | string/variable | Yes      | "Fix String"       |
+| data_dictionary_path    | string          | Yes      | "/PATH/TO/YOUR/DD" |
+| session_dictionary_path | string          | No       | nil                |
+
+**message**
++ value type is a string
++ required
+
+Should be the actual fix message passed to the filter. You might need to use a separate filter, like grok, to parse a log and set a fix string variable.
+
+**data_dictionary_path**
++ value type is a string
++ required
+
+Should be the absolute path to your data dictionary xml file.
+
+**session_dictionary_path**
++ value type is a string
++ Not required
+
+Should be the absolute path to your session dictionary xml file for FIX versions > 5.0. Note, if you do not set this but are using FIX 5.0, the filter will still work, but admin messages won't be correctly parsed - you'll lose data. The filter ignores key-value pairs that it doesn't parse correctly.
+
+**Sample Config File**
+
+*Note: For FIX < 5.0, simply omit the `session_dictionary_path`.*
 
 ```
 input {
@@ -99,6 +73,53 @@ output {
 ```
 
 Notice, we're using the Grok filter to create a `fix_message` variable from a theoretical FIX Message log file. Then, we're passing that variable to our filter. You can see this emulated behavior in our specs.
+
+## Development Environment
+
+### Vagrant
+```
+vagrant up
+```
+
+### Manual Setup (OSX)
++ `rvm install jruby`
++ `rvm use jruby`
++ `bundle install`
++ `brew install logstash`
+
+Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+
+To release a new version, update the **version number** in `logstash-filter-fix_message_filter.gemspec`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+### Running Tests
+
+```
+$ ./bin/rspec rspec
+```
+
+### Logstash Installation - Local Development
+
+1. Add the filter to your installation of LogStash
+
+    ```ruby
+    # /opt/logstash/Gemfile
+    #...
+    gem "logstash-output-kafka"
+    gem "logstash-input-http_poller"
+    gem "logstash-filter-fix_message_filter", :path => "/PATH/TO/YOUR/FORK"
+    ```
+
+2. Install the filter plugin
+
+    ```
+    $ /opt/logstash/bin/plugin install --no-verify
+    ```
+
+3. Start logstash installation with a LogStash configuration file.
+
+    ```
+    $ /opt/logstash/bin/logstash -f /PATH/TO/logstash.conf
+    ```
 
 ## Contributing
 
