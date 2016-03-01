@@ -6,11 +6,11 @@ require "logstash/filters/fix_message"
 
 module LogStash
   module  Filters
-    class FixMessageFilter < LogStash::Filters::Base
+    class FixProtocol < LogStash::Filters::Base
 
       attr_reader :data_dictionary, :session_dictionary
 
-      config_name "fix_message_filter"
+      config_name "fix_protocol"
 
       config :message, validate: :string, default: "Hello"
 
