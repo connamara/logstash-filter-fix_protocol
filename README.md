@@ -1,4 +1,4 @@
-# FIX Message Logstash Filter
+# FIX Protocol Logstash Filter
 
 A LogStash filter plugin for FIX Message parsing
 
@@ -60,7 +60,7 @@ filter {
   grok {
     match => ["message","%{TIMESTAMP_ISO8601:timestamp} %{GREEDYDATA:fix_string}: %{GREEDYDATA:fix_message}"]
   }
-  fix_message_filter {
+  fix_protocol {
     message => fix_message
     session_dictionary_path => "/PATH/TO/FIX/5.0/SESSION/DICTIONARY/FIX.xml"
     data_dictionary_path => "/PATH/TO/FIX/5.0/DATA/DICTIONARY/FIX.xml"

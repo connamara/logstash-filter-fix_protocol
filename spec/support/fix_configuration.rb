@@ -6,7 +6,7 @@ module FixConfiguration
   def fix_5_configuration
     <<-CONFIG
       filter {
-        fix_message_filter {
+        fix_protocol {
           message => fix_message
           session_dictionary_path => "#{ load_fixture("FIXT11.xml") }"
           data_dictionary_path => "#{ load_fixture("FIX50SP1.xml") }"
@@ -18,7 +18,7 @@ module FixConfiguration
   def fix_4_configuration
     <<-CONFIG
       filter {
-        fix_message_filter {
+        fix_protocol {
           message => fix_message
           data_dictionary_path => "#{ load_fixture("FIX42.xml") }"
         }
