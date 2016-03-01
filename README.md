@@ -16,7 +16,7 @@ The FIX Message filter plugin can read the FIX log as an input and turn it into 
 
 ## Installation
 ```
-$ /opt/logstash/bin/plugin install logstash-filter-fix_message_filter
+$ /opt/logstash/bin/plugin install logstash-filter-fix_protocol
 ```
 
 ## Plugin Configuration
@@ -98,7 +98,7 @@ vagrant up
 
 Then, run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To release a new version, update the **version number** in `logstash-filter-fix_message_filter.gemspec`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To release a new version, update the **version number** in `logstash-filter-fix_protocol.gemspec`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 *Note: If you get an error message about metadata, you'll need to update to ruby gems > 2.0. Run `gem update --system`*
 
@@ -117,7 +117,7 @@ $ ./bin/rspec rspec
     #...
     gem "logstash-output-kafka"
     gem "logstash-input-http_poller"
-    gem "logstash-filter-fix_message_filter", :path => "/PATH/TO/YOUR/FORK"
+    gem "logstash-filter-fix_protocol", :path => "/PATH/TO/YOUR/FORK"
     ```
 
 2. Install the filter plugin
