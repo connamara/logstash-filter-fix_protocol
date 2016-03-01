@@ -3,14 +3,14 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
-  s.name          = "logstash-filter-fix_message_filter"
+  s.name          = "logstash-filter-fix_protocol"
   s.version       = "0.1.1"
   s.authors       = ["Connamara Systems"]
   s.email         = ["info@connamara.com"]
 
-  s.summary       = "FIX protocol logstash filter"
+  s.summary       = "FIX Protocol Logstash Filter"
   s.description   = "Put your financial application logs to work with logstash FIX filtering"
-  s.homepage      = "https://github.com/connamara/logstash-filter-fix_message"
+  s.homepage      = "https://github.com/connamara/logstash-filter-fix_protocol"
   s.licenses      = ['Apache License (2.0)']
 
   s.files         = Dir['lib/**/*','vendor/**/*','*.gemspec','*.md','CONTRIBUTORS','Gemfile','LICENSE.txt','QUICKFIX_LICENSE.txt','NOTICE.TXT', 'spec/**/*', 'features/**/*']

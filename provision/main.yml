@@ -9,15 +9,15 @@
     rvm1_user: "{{ ansible_ssh_user }}"
 
   roles:
-    - { role: common, sudo: yes }
-    - { role: logstash, sudo: yes }
-    - { role: rvm_io.rvm1-ruby, sudo: yes }
+    # - { role: common, sudo: yes }
+    # - { role: logstash, sudo: yes }
+    # - { role: rvm_io.rvm1-ruby, sudo: yes }
 
   tasks:
     - name: Main | Ensure that our filter is sourced by our installation of LogStash
       lineinfile: >
         dest=/opt/logstash/Gemfile
-        line='gem "logstash-filter-fix_message_filter", :path => "/vagrant/"'
+        line='gem "logstash-filter-fix_protocol", :path => "/vagrant/"'
 
     - name: Main | Make sure that logstash installation is owned by vagrant
       file: path=/opt/logstash state=directory mode=0755 owner={{ ansible_ssh_user }} recurse=yes

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe LF::FixMessageFilter do
+describe LF::FixProtocol do
   let(:fix_5_config) do
     {
       "message" => "fix_message",
@@ -18,7 +18,7 @@ describe LF::FixMessageFilter do
 
   describe 'config' do
     context 'fix 4 configuration' do
-      let(:filter) { LF::FixMessageFilter.new(fix_4_config) }
+      let(:filter) { LF::FixProtocol.new(fix_4_config) }
 
       it 'reuses the data dictionary as the session dictionary' do
         expect(filter.data_dictionary).to be_a(LF::DataDictionary)
@@ -27,7 +27,7 @@ describe LF::FixMessageFilter do
     end
 
     context 'fix 5 configuration' do
-      let(:filter) { LF::FixMessageFilter.new(fix_5_config) }
+      let(:filter) { LF::FixProtocol.new(fix_5_config) }
 
       it 'instantiates a new data dictionary for a session dictionary' do
         expect(filter.data_dictionary).to be_a(LF::DataDictionary)

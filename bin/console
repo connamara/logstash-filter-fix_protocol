@@ -4,6 +4,6 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require "pry"
 require "irb"
-require "logstash/filters/fix_message_filter"
+require "logstash/filters/fix_protocol"
 
 IRB.start
