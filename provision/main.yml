@@ -9,9 +9,9 @@
     rvm1_user: "{{ ansible_ssh_user }}"
 
   roles:
-    - { role: common, sudo: yes }
-    - { role: logstash, sudo: yes }
-    - { role: rvm_io.rvm1-ruby, sudo: yes }
+    # - { role: common, sudo: yes }
+    # - { role: logstash, sudo: yes }
+    # - { role: rvm_io.rvm1-ruby, sudo: yes }
 
   tasks:
     - name: Main | Ensure that our filter is sourced by our installation of LogStash
