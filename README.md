@@ -23,11 +23,11 @@ $ /opt/logstash/bin/plugin install logstash-filter-fix_protocol
 
 | Setting                 | Input type      | Required | Default Value      |
 | ----------------------- | ----------------| ---------| ------------------ |
-| message                 | string/variable | Yes      | "Fix String"       |
+| fix_message             | string/variable | Yes      | "message"          |
 | data_dictionary_path    | string          | Yes      | "/PATH/TO/YOUR/DD" |
 | session_dictionary_path | string          | No       | nil                |
 
-**message**
+**fix_message**
 + value type is a string
 + required
 
@@ -58,10 +58,10 @@ input {
 }
 filter {
   grok {
-    match => ["message","%{TIMESTAMP_ISO8601:timestamp} %{GREEDYDATA:fix_string}: %{GREEDYDATA:fix_message}"]
+    match => ["message","%{TIMESTAMP_ISO8601:timestamp} %{GREEDYDATA:fix_session}: %{GREEDYDATA:fix_string}"]
   }
   fix_protocol {
-    message => fix_message
+    fix_message => fix_string
     session_dictionary_path => "/PATH/TO/FIX/5.0/SESSION/DICTIONARY/FIX.xml"
     data_dictionary_path => "/PATH/TO/FIX/5.0/DATA/DICTIONARY/FIX.xml"
   }

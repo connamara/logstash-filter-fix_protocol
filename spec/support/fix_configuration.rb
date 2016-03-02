@@ -7,7 +7,7 @@ module FixConfiguration
     <<-CONFIG
       filter {
         fix_protocol {
-          message => fix_message
+          fix_message => message
           session_dictionary_path => "#{ load_fixture("FIXT11.xml") }"
           data_dictionary_path => "#{ load_fixture("FIX50SP1.xml") }"
         }
@@ -19,7 +19,7 @@ module FixConfiguration
     <<-CONFIG
       filter {
         fix_protocol {
-          message => fix_message
+          fix_message => message
           data_dictionary_path => "#{ load_fixture("FIX42.xml") }"
         }
       }
