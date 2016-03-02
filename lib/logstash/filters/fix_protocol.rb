@@ -41,7 +41,7 @@ module LogStash
 
           begin
             fix_message = FixMessage.new(message_string, data_dictionary, session_dictionary)
-          rescue Java::Quickfix::InvalidMessage
+          rescue Java::Quickfix::InvalidMessage, ArgumentError
             event["tags"] = ["_fix_parse_failure"]
           end
 

@@ -36,10 +36,21 @@ describe LF::FixProtocol do
     end
   end
 
-  context 'invalid message' do
+  context 'invalid message - Java::Quickfix::InvalidMessage' do
     config fix_4_configuration
 
     invalid_msg = "8=invalid_stuff"
+
+    sample(invalid_msg) do
+      insist { subject["tags"] } == ["_fix_parse_failure"]
+      insist { subject["message"] } == invalid_msg
+    end
+  end
+
+  context 'invalid message - ArgumentError' do
+    config fix_4_configuration
+
+    invalid_msg = "8=FIX.4.09=8135=D34=349garbled=TW52=<TIME>56=ISLD11=ID21=340=154=155=INTC10=0"
 
     sample(invalid_msg) do
       insist { subject["tags"] } == ["_fix_parse_failure"]
