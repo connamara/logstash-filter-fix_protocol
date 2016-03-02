@@ -12,7 +12,7 @@ module LogStash
 
       config_name "fix_protocol"
 
-      config :message, validate: :string, default: "Hello"
+      config :fix_message, validate: :string, default: "message"
 
       config :data_dictionary_path, validate: :string, default: "/PATH/TO/YOUR/DD"
       config :session_dictionary_path, validate: :string, default: nil
@@ -34,8 +34,10 @@ module LogStash
       end
 
       def filter(event)
-        if event["fix_message"]
-          fix_message = FixMessage.new(event["fix_message"], data_dictionary, session_dictionary)
+        message_string = event[config["fix_message"]]
+
+        if message_string
+          fix_message = FixMessage.new(message_string, data_dictionary, session_dictionary)
 
           fix_hash = fix_message.to_hash
 
