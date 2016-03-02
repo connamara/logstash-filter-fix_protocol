@@ -37,21 +37,29 @@ module LogStash
         message_string = event[config["fix_message"]]
 
         if message_string
-          fix_message = FixMessage.new(message_string, data_dictionary, session_dictionary)
+          fix_message = nil
 
-          fix_hash = fix_message.to_hash
+          begin
+            fix_message = FixMessage.new(message_string, data_dictionary, session_dictionary)
+          rescue Java::Quickfix::InvalidMessage => e
+            event["_fix_parse_failure"] = e.message
+          end
 
-          fix_hash.each do |key, value|
-            begin
-              event[key] = value
-            rescue NoMethodError => e
-              puts "********"
-              puts "WARNING: Could not correctly parse #{event["fix_message"]}"
-              puts JSON.pretty_generate(fix_hash)
-              puts "Message: #{e.message}"
-              puts "********"
-            ensure
-              next
+          if fix_message
+            fix_hash = fix_message.to_hash
+
+            fix_hash.each do |key, value|
+              begin
+                event[key] = value
+              rescue NoMethodError => e
+                puts "********"
+                puts "WARNING: Could not correctly parse #{event["fix_message"]}"
+                puts JSON.pretty_generate(fix_hash)
+                puts "Message: #{e.message}"
+                puts "********"
+              ensure
+                next
+              end
             end
           end
         end

@@ -36,6 +36,17 @@ describe LF::FixProtocol do
     end
   end
 
+  context 'invalid message' do
+    config fix_4_configuration
+
+    invalid_msg = "8=invalid_stuff"
+
+    sample(invalid_msg) do
+      insist { subject["_fix_parse_failure"] } == "Missing or garbled message type in #{invalid_msg}"
+      insist { subject["message"] } == invalid_msg
+    end
+  end
+
   context 'an incoming execution report' do
     config fix_4_configuration
 
