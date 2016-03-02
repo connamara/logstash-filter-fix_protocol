@@ -42,7 +42,7 @@ describe LF::FixProtocol do
     invalid_msg = "8=invalid_stuff"
 
     sample(invalid_msg) do
-      insist { subject["_fix_parse_failure"] } == "Missing or garbled message type in #{invalid_msg}"
+      insist { subject["tags"] } == ["_fix_parse_failure"]
       insist { subject["message"] } == invalid_msg
     end
   end
