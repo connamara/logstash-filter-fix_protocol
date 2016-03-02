@@ -1,4 +1,4 @@
-# FIX Protocol Logstash Filter
+# FIX Protocol Logstash Filter [![Build Status](https://travis-ci.org/connamara/logstash-filter-fix_protocol.svg?branch=master)](https://travis-ci.org/connamara/logstash-filter-fix_protocol)
 
 A LogStash filter plugin for FIX Message parsing
 
