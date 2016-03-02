@@ -1,3 +1,23 @@
 language: ruby
+
 rvm:
-  - 2.1.0
+  - jruby-1.7.24
+
+gemfile:
+  - Gemfile
+
+sudo: false
+
+cache: bundler
+
+before_script: bundle update
+
+script: "./bin/rspec spec"
+
+notifications:
+  email: false
+  slack:
+    on_pull_requests: false
+    on_success: change
+    on_failure: always
+    secure: ejz5JDFim7gQTHkA5FwWnIlpcT8jWXNHk6O7uOcsP3589aJnJ0KM/mYFJ2+sd1uyy9Ti/eVjSRsiRc6jbyVG0ktqMgU9pcOPTYOE0xti9uNYN31Ee9F6GPLjlwHWdLiWwU+vAeJcUx2CMgNb4NhZZ4tiH5fm9gDHdj7CxI2oUx/5mlEKQvyxIyz+Vlb34JLQs5jKb9hkYx1bGZd9l/Wv2lCIBZqWqx9z4Vkd0lE4tDPg+vK5j0uUHn5gF1FuX/0IuOu73kMMIdCQdJBPaRDKulgOij+Fm/0qVcnSuyavMeL92aQ/inPMBMrxfqwMOLGKY+3qSIIzHjfx5pqPjQ6cqFm9+eAq4cnHTcH9yFnLjCk+J65rIfXTHj9Civm6Lgaecsnw5cmLk350GRbdXUSUlHu0dqvFLiYQJtzZxlXQu64Tz6GVDqWhMhuopsihfYo5qNmNq4gQdGoW+A0j4KkA6oYmPtEaaX8F/ivLOhS3nqa4L+bVkSV57EteBAvGaqJTbem2KgdO06GR/UJr8qR4jZfaY7HL9Hq2qv0muRF20wP8+dZVlW6G5K8hCctlmwnniytt/j2w9ZSdMfPs1MewGtVjct2lkVu9pw1urDuhoK8U+ERfzvHB7XvEST/jbaFKGNVu4hh8+kG5BbikfhBkQcis+XlFX4kHfwJN/ZxsY+Q=
