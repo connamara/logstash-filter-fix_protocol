@@ -3,6 +3,7 @@ require "logstash/filters/base"
 require "logstash/namespace"
 require "logstash/filters/data_dictionary"
 require "logstash/filters/fix_message"
+require 'active_support/core_ext'
 
 module LogStash
   module  Filters
@@ -48,18 +49,15 @@ module LogStash
           if fix_message
             fix_hash = fix_message.to_hash
 
+            # TODO: Unknown tags are only set after calling #to_hash
+            # this creates an implicit timing issue
+            if fix_message.unknown_fields.any?
+              event["unknown_fields"] = fix_message.unknown_fields
+              event["tags"] = ["_fix_field_not_found"]
+            end
+
             fix_hash.each do |key, value|
-              begin
-                event[key] = value
-              rescue NoMethodError => e
-                puts "********"
-                puts "WARNING: Could not correctly parse #{event["fix_message"]}"
-                puts JSON.pretty_generate(fix_hash)
-                puts "Message: #{e.message}"
-                puts "********"
-              ensure
-                next
-              end
+              event[key] = value
             end
           end
         end

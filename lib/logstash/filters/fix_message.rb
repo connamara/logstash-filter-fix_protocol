@@ -1,17 +1,16 @@
 require 'quickfix'
-require 'active_support/core_ext'
 
 module LogStash
   module Filters
     class FixMessage < quickfix.Message
-      attr_reader :type, :msg_string, :session_dictionary, :data_dictionary, :all_dictionaries
+      attr_reader :type, :msg_string, :session_dictionary, :data_dictionary, :all_dictionaries, :unknown_fields
 
       def initialize(msg_string, data_dictionary, session_dictionary)
         @session_dictionary = session_dictionary
         @data_dictionary = data_dictionary
         @msg_string = msg_string
         @type = quickfix.MessageUtils.getMessageType(msg_string)
-
+        @unknown_fields = []
         @all_dictionaries = [@data_dictionary, @session_dictionary]
 
         super(msg_string, data_dictionary, false)
@@ -44,6 +43,14 @@ module LogStash
           value = dd.get_field_name(tag)
           return value if value.present?
         end
+
+        tag = to_string(tag)
+        @unknown_fields << tag
+        tag
+      end
+
+      def to_string(tag)
+        tag.to_s.force_encoding("UTF-8")
       end
 
       def field_map_to_hash(field_map, msg_type = nil)
