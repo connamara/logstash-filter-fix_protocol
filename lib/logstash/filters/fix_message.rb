@@ -63,17 +63,21 @@ module LogStash
           tag   = field.get_tag
           value = field.get_value
 
-          # IF GROUP
           if msg_type.present? and @data_dictionary.is_group(msg_type, tag)
             groups = []
 
             for i in 1..value.to_i
-              group_map = field_map.get_group(i, tag)
-              groups << field_map_to_hash(group_map, msg_type)
+              begin
+                group_map  = field_map.get_group(i, tag)
+                group_hash = field_map_to_hash(group_map, msg_type)
+              rescue Java::Quickfix::FieldNotFound
+                group_hash = {to_string(tag) => i}
+                self.unknown_fields << to_string(tag)
+              end
+              groups << group_hash
             end
 
             value = groups
-          # IF FIELD
           elsif @data_dictionary.is_field(tag)
             value =
               case field_type(tag)

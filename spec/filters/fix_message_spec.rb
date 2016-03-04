@@ -79,6 +79,22 @@ describe LF::FixMessage do
         expect(fix_message.unknown_fields.include?("7012")).to be true
       end
     end
+
+    context 'invalid message - group field name not found (Java::Quickfix::FieldNotFound)' do
+      let(:fix_string) { "8=FIX.4.235=D34=249=TW52=<TIME>56=ISLD11=ID21=140=154=138=200.0055=INTC386=3336=PRE-OPEN336=AFTER-HOURS60=<TIME>" }
+
+      it 'adds an error object and uses the data dictionary index number as the key' do
+        data_dictionary = LF::DataDictionary.new(load_fixture(fix_5[:data_dictionary]))
+        sess_dictionary = LF::DataDictionary.new(load_fixture(fix_5[:session_dictionary]))
+
+        fix_message = LF::FixMessage.new(fix_string, data_dictionary, sess_dictionary)
+        hash = fix_message.to_hash
+        expect(fix_message.unknown_fields.include?("386")).to be true
+        expect(hash["NoTradingSessions"]).to eq([{"TradingSessionID"=>"PRE-OPEN"}, {"TradingSessionID"=>"AFTER-HOURS"}, {"386"=>3}])
+      end
+    end
+  end
+
   context 'message types' do
     # most data is from: http://fixparser.targetcompid.com/
     context 'heartbeats' do
