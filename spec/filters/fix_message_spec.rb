@@ -9,6 +9,9 @@ describe LF::FixMessage do
   let(:message) { LF::FixMessage.new(message_str, data_dictionary, session_dictionary) }
   let(:message2) { LF::FixMessage.new(another_str, data_dictionary, session_dictionary) }
 
+  let(:fix_4)  { {data_dictionary: "FIX42.xml", session_dictionary: nil} }
+  let(:fix_5)  { {data_dictionary: "FIX50SP1.xml", session_dictionary: "FIXT11.xml"} }
+
   describe '#to_hash' do
     it 'converts the FIX message string to a hash in human readable format' do
       expect(message.to_hash).to eq({
@@ -59,10 +62,41 @@ describe LF::FixMessage do
     end
   end
 
+  describe '#field_map_to_hash' do
+    context 'invalid message - field name not found' do
+      let(:fix_string) { "8=FIX.4.29=24035=834=649=DUMMY_INC52=20150826-23:10:17.74456=ANOTHER_INC57=Firm_B1=Inst_B6=011=best_buy14=517=ITRZ1201508261_2420=022=831=101032=537=ITRZ1201508261_1238=539=27012=22740=241=best_buy44=101154=155=ITRZ160=20150826-23:10:15.547150=2151=010=227" }
+
+      it 'adds an error object and uses the data dictionary index number as the key' do
+        data_dictionary = LF::DataDictionary.new(load_fixture(fix_5[:data_dictionary]))
+        sess_dictionary = LF::DataDictionary.new(load_fixture(fix_5[:session_dictionary]))
+
+        fix_message = LF::FixMessage.new(fix_string, data_dictionary, sess_dictionary)
+        hash = fix_message.to_hash
+        # Side Note: field 20, LastShares, was changed between FIX 4 / 5
+        expect(hash["20"]).to eq("0")
+        expect(hash["7012"]).to eq("227")
+        expect(fix_message.unknown_fields.include?("20")).to be true
+        expect(fix_message.unknown_fields.include?("7012")).to be true
+      end
+    end
+
+    context 'invalid message - group field name not found (Java::Quickfix::FieldNotFound)' do
+      let(:fix_string) { "8=FIX.4.235=D34=249=TW52=<TIME>56=ISLD11=ID21=140=154=138=200.0055=INTC386=3336=PRE-OPEN336=AFTER-HOURS60=<TIME>" }
+
+      it 'adds an error object and uses the data dictionary index number as the key' do
+        data_dictionary = LF::DataDictionary.new(load_fixture(fix_5[:data_dictionary]))
+        sess_dictionary = LF::DataDictionary.new(load_fixture(fix_5[:session_dictionary]))
+
+        fix_message = LF::FixMessage.new(fix_string, data_dictionary, sess_dictionary)
+        hash = fix_message.to_hash
+        expect(fix_message.unknown_fields.include?("386")).to be true
+        expect(hash["NoTradingSessions"]).to eq([{"TradingSessionID"=>"PRE-OPEN"}, {"TradingSessionID"=>"AFTER-HOURS"}, {"386"=>3}])
+      end
+    end
+  end
+
   context 'message types' do
-    let(:fix_4)  { {data_dictionary: "FIX42.xml", session_dictionary: nil} }
-    let(:fix_5)  { {data_dictionary: "FIX50SP1.xml", session_dictionary: "FIXT11.xml"} }
-    # data is from: http://fixparser.targetcompid.com/
+    # most data is from: http://fixparser.targetcompid.com/
     context 'heartbeats' do
       it 'can parse these' do
         [fix_4, fix_5].each do |version|
@@ -88,8 +122,7 @@ describe LF::FixMessage do
             expect(["Logon", "LOGON"].include?(hash["MsgType"])).to be true
 
             expect(hash["BeginString"]).to be_a String
-            # NOTE: This field was changed between FIX 4 / 5
-            # expect([String, Fixnum].include?(hash["HeartBtInt"].class)).to be true
+            expect([String, Fixnum].include?(hash["HeartBtInt"].class)).to be true
 
             expect(["BANZAI", "EXEC"].include?(hash["TargetCompID"])).to be true
             expect(["BANZAI", "EXEC"].include?(hash["SenderCompID"])).to be true
