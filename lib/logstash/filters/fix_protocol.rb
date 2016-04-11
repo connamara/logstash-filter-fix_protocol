@@ -3,6 +3,7 @@ require "logstash/filters/base"
 require "logstash/namespace"
 require "logstash/filters/data_dictionary"
 require "logstash/filters/fix_message"
+require 'active_support'
 require 'active_support/core_ext'
 
 module LogStash
