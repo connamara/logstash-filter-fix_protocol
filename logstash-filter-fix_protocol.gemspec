@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name          = "logstash-filter-fix_protocol"
-  s.version       = "0.2.0"
+  s.version       = "0.2.1"
   s.authors       = ["Connamara Systems"]
   s.email         = ["info@connamara.com"]
 
