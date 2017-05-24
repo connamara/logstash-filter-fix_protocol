@@ -5,11 +5,12 @@ require "logstash/filters/data_dictionary"
 require "logstash/filters/fix_message"
 require 'active_support'
 require 'active_support/core_ext'
+# monkey-patching breaking 5x behavior
+require 'logstash/filters/extensions/event'
 
 module LogStash
   module  Filters
     class FixProtocol < LogStash::Filters::Base
-
       attr_reader :data_dictionary, :session_dictionary
 
       config_name "fix_protocol"
