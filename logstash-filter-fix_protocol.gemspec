@@ -1,10 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'logstash/filters/version'
 
 Gem::Specification.new do |s|
   s.name          = "logstash-filter-fix_protocol"
-  s.version       = "0.2.1"
+  s.version       = "0.3.0"
   s.authors       = ["Connamara Systems"]
   s.email         = ["info@connamara.com"]
 
@@ -21,7 +22,13 @@ Gem::Specification.new do |s|
 
   s.metadata = { "logstash_plugin" => "true", "logstash_group" => "filter" }
 
-  s.add_runtime_dependency "logstash-core", ">= 2.0.0.beta2", "< 3.0.0"
+  if Logstash::VERSION == '5.x'
+    s.add_runtime_dependency 'logstash-core', '>= 5.0.0'
+  elsif Logstash::VERSION == '2.x'
+    s.add_runtime_dependency 'logstash-core', '>= 2.0.0.beta2', '< 3.0.0'
+  else
+    raise "Invalid Logstash::VERSION - should be 2x or 5x located in `/lib/logstash/filters/version`"
+  end
   s.add_runtime_dependency "logstash-input-generator"
   s.add_runtime_dependency "activesupport"
   s.add_runtime_dependency "quickfix-jruby"
