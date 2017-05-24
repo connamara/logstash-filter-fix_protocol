@@ -9,11 +9,11 @@
     rvm1_user: "{{ ansible_ssh_user }}"
 
   roles:
-    # - common
+    - common
     - { role: logstash-5.x, when: logstash_version == "5.x" }
     - { role: logstash-2.x, when: logstash_version == "2.x" }
-    # - rvm_io.rvm1-ruby
-    # - vim
+    - rvm_io.rvm1-ruby
+    - vim
 
   tasks:
     - name: Main | set logstash_base_dir for 5.x
