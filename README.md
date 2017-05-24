@@ -108,6 +108,36 @@ To release a new version, update the **version number** in `logstash-filter-fix_
 $ ./bin/rspec rspec
 ```
 
+### Logstash 2x vs 5x
+
+Remove any installed versions of logstash and install your desired version.
+
+After you've completed the 'Manual change' or 'Ansible provisioning change' below, follow instructions for 'Development Logstash Installation'
+
+#### Manual change:
+
+Change the version number in `lib/logstash/filters/version.rb` 
+
+```ruby
+module Logstash
+  VERSION = '2.x'
+end
+```
+
+#### Ansible provisioning change:
+
+Change the version number in `provision/group_vars/all.yml`
+
+```yml
+logstash_version: 5.x # -> 2.x
+```
+
+Run vagrant provision:
+
+```
+vagrant provision
+```
+
 ### Development Logstash Installation
 
 1. Add the filter to your installation of LogStash
