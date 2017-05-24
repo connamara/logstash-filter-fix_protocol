@@ -9,24 +9,43 @@
     rvm1_user: "{{ ansible_ssh_user }}"
 
   roles:
-    - { role: common, sudo: yes }
-    - { role: logstash, sudo: yes }
-    - { role: rvm_io.rvm1-ruby, sudo: yes }
+    # - common
+    - { role: logstash-5.x, when: logstash_version == "5.x" }
+    - { role: logstash-2.x, when: logstash_version == "2.x" }
+    # - rvm_io.rvm1-ruby
+    # - vim
 
   tasks:
+    - name: Main | set logstash_base_dir for 5.x
+      set_fact:
+        logstash_base_dir: /usr/share/logstash
+        plugin_cmd: logstash-plugin
+      when: logstash_version == "5.x"
+
+    - name: Main | set logstash_base_dir for 2.x
+      set_fact:
+        logstash_base_dir: /opt/logstash
+        plugin_cmd: plugin
+      when: logstash_version == "2.x"
+
+    - name: Main | make 'vagrant ssh' cd into /vagrant dir
+      lineinfile: >
+        dest=/home/vagrant/.bashrc
+        line='cd /vagrant'
+
+    - name: Main | ensure logstash-core is consistent with installed logstash version
+      lineinfile:
+        dest: /vagrant/lib/logstash/filters/version.rb
+        regexp: 'VERSION'
+        line: "  VERSION = '{{ logstash_version }}'"
+
     - name: Main | Ensure that our filter is sourced by our installation of LogStash
       lineinfile: >
-        dest=/opt/logstash/Gemfile
+        dest={{ logstash_base_dir }}/Gemfile
         line='gem "logstash-filter-fix_protocol", :path => "/vagrant/"'
 
-    - name: Main | Make sure that logstash installation is owned by vagrant
-      file: path=/opt/logstash state=directory mode=0755 owner={{ ansible_ssh_user }} recurse=yes
-
-    - name: Main | Symlink logstash executable to /usr/bin
-      file: src=/opt/logstash/bin/logstash dest=/usr/bin/logstash state=link
-
     - name: Main | Install our LogStash Plugin
-      shell: bin/plugin install --no-verify chdir=/opt/logstash/
+      shell: bin/{{ plugin_cmd }} install --no-verify chdir={{ logstash_base_dir }}
 
     - name: Main | Install the File LogStash Plugin
-      shell: bin/plugin install logstash-input-file chdir=/opt/logstash/
+      shell: bin/{{ plugin_cmd }} install logstash-input-file chdir={{ logstash_base_dir }}
