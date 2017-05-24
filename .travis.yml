@@ -1,5 +1,8 @@
 language: ruby
 
+jdk:
+  - oraclejdk8
+
 rvm:
   - jruby-1.7.24
 
