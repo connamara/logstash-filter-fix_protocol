@@ -1,0 +1,20 @@
+---
+- name: Add Elasticsearch GPG key.
+  rpm_key:
+    key: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add Logstash repository.
+  copy:
+    src: logstash.repo
+    dest: /etc/yum.repos.d/logstash.repo
+    mode: 0644
+
+- name: Install Logstash.
+  yum: pkg=logstash state=latest
+
+- name: Make sure that logstash installation is owned by vagrant
+  file: path=/opt/logstash state=directory mode=0755 owner={{ ansible_ssh_user }} recurse=yes
+
+- name: Symlink logstash executable to /usr/bin
+  file: src=/opt/logstash/bin/logstash dest=/usr/bin/logstash state=link
