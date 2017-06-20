@@ -81,7 +81,7 @@ input {
 }
 filter {
   grok {
-    match => ["message","%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:level}  %{GREEDYDATA:Cameron} - <%{SPACE} %{GREEDYDATA:fix_string}"]
+    match => ["message","%{TIMESTAMP_ISO8601:timestamp} %{GREEDYDATA:fix_session}: %{GREEDYDATA:fix_string}"]
   }
   if [message] =~ "=FIX.4.2" {
     fix_protocol {
