@@ -71,6 +71,45 @@ output {
 }
 
 ```
+**Sample Config File For Multiple FIX Versions**
+```
+input {
+  file {
+    path => "/path/to/fix.log"
+    start_position => "beginning"
+  }
+}
+filter {
+  grok {
+    match => ["message","%{TIMESTAMP_ISO8601:timestamp} %{GREEDYDATA:fix_session}: %{GREEDYDATA:fix_string}"]
+  }
+  if [message] =~ "=FIX.4.2" {
+    fix_protocol {
+      fix_message => fix_string
+      data_dictionary_path => "/path/to/datadict/FIX42.xml"
+    }
+
+  if [message] =~ "=FIX.4.4" {
+    fix_protocol {
+      fix_message => fix_string
+      data_dictionary_path => "/path/to/datadict/FIX44.xml"
+    }
+  }
+  if [message] =~ "=FIX.5.0" {
+    fix_protocol {
+      fix_message => fix_string
+      data_dictionary_path => "/path/to/datadict/FIX50.xml"
+    }
+  }
+
+  }
+}
+output {
+  stdout { codec => rubydebug }
+}
+
+
+```
 
 Notice, we're using the Grok filter to create a `fix_message` variable from a theoretical FIX Message log file. Then, we're passing that variable to our filter. You can see this emulated behavior in our specs.
 
