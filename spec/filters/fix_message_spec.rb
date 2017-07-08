@@ -10,6 +10,7 @@ describe LF::FixMessage do
   let(:message2) { LF::FixMessage.new(another_str, data_dictionary, session_dictionary) }
 
   let(:fix_4)  { {data_dictionary: "FIX42.xml", session_dictionary: nil} }
+  let(:fix_44) { {data_dictionary: "FIX44.xml", session_dictionary: nil} }
   let(:fix_5)  { {data_dictionary: "FIX50SP1.xml", session_dictionary: "FIXT11.xml"} }
 
   describe '#to_hash' do
@@ -238,6 +239,53 @@ describe LF::FixMessage do
           should_parse_fix_messages('message_types/market_data_snapshot.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
             expect(["BID", "OFFER", "INDEX_VALUE"].include?(hash["NoMDEntries"].first["MDEntryType"])).to be true
           end
+        end
+      end
+    end
+  end
+
+  context 'unrecognized nested sub-groups tag 802 (bug #77)' do
+=begin
+    <message name="ExecutionReport" msgtype="8" msgcat="app">
+      <field name="OrderID" required="Y"/>
+      <field name="SecondaryOrderID" required="N"/>
+      ...
+      tag: 453 NoPartyIDs Value = 4 (NUMINGROUP)
+      <component name="Parties" required="N"/>
+        <group name="NoPartyIDs" required="N">
+          tag: 448  <field name="PartyID" required="N"/>
+          tag: 447  <field name="PartyIDSource" required="N"/>
+          tag: 452  <field name="PartyRole" required="N"/>
+
+                    tag: 802 NoPartySubIDs value = 2 (NUMINGROUP)
+                    <component name="PtysSubGrp" required="N"/>
+                      <group name="NoPartySubIDs" required="N">
+                        tag: 523  <field name="PartySubID" required="N"/>
+                        tag: 803  <field name="PartySubIDType" required="N"/>
+                      </group>
+                    </component>
+        </group>
+      </component>
+=end
+
+    it 'can parse these' do
+      [fix_44, fix_5].each do |version|
+        should_parse_fix_messages('message_types/execution_report_with_party_sub_ids.txt', version[:data_dictionary], version[:session_dictionary]) do |hash|
+          expect(hash["NoPartyIDs"]).to eq(
+            [
+              {"PartyID"=>"FOOBAR", "PartyIDSource"=>"PROPRIETARY_CUSTOM_CODE", "PartyRole"=>1},
+              {
+                "PartyID"=>"JDR4:282205",
+                "PartyIDSource"=>"PROPRIETARY_CUSTOM_CODE",
+                "PartyRole"=>11,
+                "NoPartySubIDs"=>[
+                  {"PartySubID"=>"27", "PartySubIDType"=>4},
+                  {"PartySubID"=>"25906", "PartySubIDType"=>4000}
+                ]
+              },
+             {"PartyID"=>"ACME CORPORATION", "PartyIDSource"=>"PROPRIETARY_CUSTOM_CODE", "PartyRole"=>13},
+             {"PartyID"=>"BBUNNY:13785105", "PartyIDSource"=>"PROPRIETARY_CUSTOM_CODE", "PartyRole"=>36}],
+          )
         end
       end
     end
