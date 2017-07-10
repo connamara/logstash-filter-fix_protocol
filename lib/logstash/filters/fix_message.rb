@@ -63,7 +63,7 @@ module LogStash
           tag   = field.get_tag
           value = field.get_value
 
-          if msg_type.present? and @data_dictionary.is_group(msg_type, tag)
+          if is_group?(msg_type, tag)
             groups = []
 
             for i in 1..value.to_i
@@ -71,7 +71,7 @@ module LogStash
                 group_map  = field_map.get_group(i, tag)
                 group_hash = field_map_to_hash(group_map, msg_type)
               rescue Java::Quickfix::FieldNotFound
-                group_hash = {to_string(tag) => i}
+                group_hash = { to_string(tag) => i }
                 self.unknown_fields << to_string(tag)
               end
               groups << group_hash
@@ -84,7 +84,6 @@ module LogStash
                 when "INT", "DAYOFMONTH" then value.to_i
                 when "PRICE", "FLOAT", "QTY" then value.to_f
                 when "BOOLEAN" then value == "Y"
-                when "NUMINGROUP" then field_map.to_hash(value)
                 else
                   value_name = @data_dictionary.get_value_name(tag, value)
                   value_name.presence || value
@@ -97,6 +96,14 @@ module LogStash
         hash
       end
 
+      # A word of caution here: jarred Quickfix/j doesn't recognize tag 802 as a group, so we explicitly ask
+      # if the field tag is of type "NUMINGROUP" - see issue #77
+      # Tag: 452, value: 4, field_map: LogStash::Filters::FixMessage, @data_dictionary.is_group(8, 452) == true
+      # Tag: 802, value: 2, field_map: Java::Quickfix::Group,         @data_dictionary.is_group(8, 802) == false
+      def is_group?(msg_type, tag)
+        msg_type &&
+        @data_dictionary.is_group(msg_type, tag) || field_type(tag) == "NUMINGROUP"
+      end
     end
   end
 end
