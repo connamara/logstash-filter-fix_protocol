@@ -5,7 +5,7 @@ require 'logstash/filters/version'
 
 Gem::Specification.new do |s|
   s.name          = "logstash-filter-fix_protocol"
-  s.version       = "0.3.2"
+  s.version       = "0.3.3"
   s.authors       = ["Connamara Systems"]
   s.email         = ["info@connamara.com"]
 
