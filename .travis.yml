@@ -4,16 +4,9 @@ jdk:
   - oraclejdk8
 
 rvm:
-  - jruby-1.7.24
-
-gemfile:
-  - Gemfile
-
-sudo: false
-
-cache: bundler
-
-before_script: bundle update
+  - jruby-18mode
+  - jruby-19mode
+  - jruby
 
 script: "./bin/rspec spec"
 
