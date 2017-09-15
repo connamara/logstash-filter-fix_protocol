@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   end
   s.add_runtime_dependency "logstash-input-generator"
   s.add_runtime_dependency "activesupport"
-  s.add_runtime_dependency "quickfix-jruby"
+  s.add_runtime_dependency "quickfix-jruby", '~> 1.6', '>= 1.6.5'
 
   s.add_development_dependency "logstash-devutils"
   s.add_development_dependency "bundler", "~> 1.8"
